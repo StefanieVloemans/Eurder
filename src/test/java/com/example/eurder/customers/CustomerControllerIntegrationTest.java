@@ -1,7 +1,7 @@
 package com.example.eurder.customers;
 
-import com.example.eurder.customers.dto.CreateCustomerDto;
-import com.example.eurder.customers.dto.CustomerCreatedDto;
+import com.example.eurder.customers.dtos.CreateCustomerDto;
+import com.example.eurder.customers.dtos.CustomerCreatedDto;
 import io.restassured.RestAssured;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -14,21 +14,14 @@ import static io.restassured.http.ContentType.JSON;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
-class CustomerControllerTest {
+class CustomerControllerIntegrationTest {
     @LocalServerPort
     private int port;
 
     @Test
     void givenCustomerDetails_WhenCreateCustomerIsCalled_ThenNewCustomerIsAddedInDatabaseClass() {
         //GIVEN
-        CreateCustomerDto customerToCreate = new CreateCustomerDto(
-        "Bart",
-        "Simpson",
-        "bart@simpson.com",
-        "Street",
-        "1",
-        "Springfield",
-        "012/3456789");
+        CreateCustomerDto customerToCreate = new CreateCustomerDto.CreateCustomerDtoBuilder("Bart","Simpson","bart@simpson.com").build();
 
         //WHEN
         CustomerCreatedDto newCustomer = RestAssured

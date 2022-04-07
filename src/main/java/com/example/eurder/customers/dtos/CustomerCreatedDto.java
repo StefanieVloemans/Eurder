@@ -1,4 +1,4 @@
-package com.example.eurder.customers.dto;
+package com.example.eurder.customers.dtos;
 
 public class CustomerCreatedDto {
     private final String customerId;

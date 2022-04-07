@@ -1,7 +1,7 @@
 package com.example.eurder.customers;
 
-import com.example.eurder.customers.dto.CreateCustomerDto;
-import com.example.eurder.customers.dto.CustomerCreatedDto;
+import com.example.eurder.customers.dtos.CreateCustomerDto;
+import com.example.eurder.customers.dtos.CustomerCreatedDto;
 import org.springframework.stereotype.Component;
 
 @Component
