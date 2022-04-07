@@ -15,12 +15,12 @@ import static io.restassured.http.ContentType.JSON;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
-class ItemControllerIntegrationTest {
+class ItemControllerIntegrationTests {
     @LocalServerPort
     private int port;
 
     @Test
-    void givenItemDetails_WhenAddItemIsCalled_ThenNewtemIsAddedInDatabase() {
+    void givenItemDetails_WhenAddItemIsCalled_ThenNewItemIsAddedInDatabase() {
         AddItemDto addItemDto = new AddItemDto("Donut", "Sweet snack with hole in the middle", 19.99, 50);
 
         ItemAddedDto addedItemDto = RestAssured

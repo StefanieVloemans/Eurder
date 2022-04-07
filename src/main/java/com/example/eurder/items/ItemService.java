@@ -22,6 +22,17 @@ public class ItemService {
     public ItemAddedDto addItem(AddItemDto addItemDto) {
         logger.info("method addItem is called");
 
+        checkIfProvidedInputIsCompleteAndCorrect(addItemDto);
+
+        Item itemToAdd = itemMapper.toItem(addItemDto);
+
+        validateIfItemNameAlreadyExists(itemToAdd);
+
+        logger.info("Created item is returned");
+        return itemMapper.toItemAddedDto(itemRepository.addItem(itemToAdd));
+    }
+
+    private void checkIfProvidedInputIsCompleteAndCorrect(AddItemDto addItemDto) {
         if (addItemDto.getItemName() == null || addItemDto.getItemName().isEmpty() || addItemDto.getItemName().isBlank()) {
             logger.error(new NoItemProvidedException().getMessage());
             throw new NoItemProvidedException();
@@ -41,15 +52,12 @@ public class ItemService {
             logger.error(new InvalidAmountException().getMessage());
             throw new InvalidAmountException();
         }
+    }
 
-        Item itemToAdd = itemMapper.toItem(addItemDto);
-
+    private void validateIfItemNameAlreadyExists(Item itemToAdd) {
         if (itemRepository.checkIfItemNameAlreadyExists(itemToAdd).isPresent()) {
             logger.error(new ItemWithThisNameAlreadyExistsException().getMessage());
             throw new ItemWithThisNameAlreadyExistsException();
         }
-
-        logger.info("Created item is returned");
-        return itemMapper.toItemAddedDto(itemRepository.addItem(itemToAdd));
     }
 }
