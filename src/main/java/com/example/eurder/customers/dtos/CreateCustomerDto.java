@@ -13,7 +13,7 @@ public class CreateCustomerDto {
     }
 
     private CreateCustomerDto(CreateCustomerDtoBuilder builder) {
-        this.firstName = builder. firstName;
+        this.firstName = builder.firstName;
         this.lastName = builder.lastName;
         this.emailAddress = builder.emailAddress;
         this.streetName = builder.streetName;
