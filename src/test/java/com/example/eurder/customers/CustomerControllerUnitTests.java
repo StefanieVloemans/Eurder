@@ -143,13 +143,12 @@ public class CustomerControllerUnitTests {
         CreateCustomerDto alreadyExistingCustomer = new CreateCustomerDto.CreateCustomerDtoBuilder("Bart","Simpson","bart@simpson.com").build();
         customerRepository.createCustomer(customerMapper.toCustomer(alreadyExistingCustomer));
 
-        CreateCustomerDto customerWithEmailNotUnique = new CreateCustomerDto.CreateCustomerDtoBuilder("Homer","Simpson","bart@simpson.com").build();
-
+        CreateCustomerDto customerDuplicateEmailAddress = new CreateCustomerDto.CreateCustomerDtoBuilder("Homer","Simpson","bart@simpson.com").build();
 
         //WHEN + THEN
         RestAssured
                 .given()
-                .body(customerWithEmailNotUnique)
+                .body(customerDuplicateEmailAddress)
                 .accept(JSON)
                 .contentType(JSON)
                 .when()

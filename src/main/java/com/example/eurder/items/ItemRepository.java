@@ -1,6 +1,9 @@
 package com.example.eurder.items;
 
+import com.example.eurder.items.dtos.AddItemDto;
 import org.springframework.stereotype.Repository;
+
+import java.util.Optional;
 
 @Repository
 public class ItemRepository {
@@ -11,4 +14,11 @@ public class ItemRepository {
     }
 
 
+    public Item addItem(Item itemToAdd) {
+        return itemDatabase.saveItem(itemToAdd);
+    }
+
+    public Optional<Item> checkIfItemNameAlreadyExists(Item item) {
+        return itemDatabase.checkIfItemNameAlreadyExists(item);
+    }
 }

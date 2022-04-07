@@ -20,7 +20,6 @@ public class CustomerService {
 
     public CustomerCreatedDto createCustomer(CreateCustomerDto createCustomerDto) {
         logger.info("method createCustomer is called");
-
         Customer customerToCreate = customerMapper.toCustomer(createCustomerDto);
 
         validateIfFirstAndLastNameArePresent(createCustomerDto);
