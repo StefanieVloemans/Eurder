@@ -9,10 +9,15 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping(path = "/customers")
 public class CustomerController {
+    private final CustomerService customerService;
+
+    public CustomerController(CustomerService customerService) {
+        this.customerService = customerService;
+    }
 
     @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
-    public CustomerCreatedDto createCustomer(@RequestBody CreateCustomerDto customerToCreate){
-        return new CustomerCreatedDto("1", "Bart", "Simpson","bart@simpson.com","Street","1", "Springfield", "012/3456789" );
+    public CustomerCreatedDto createCustomer(@RequestBody CreateCustomerDto createCustomerDto){
+        return customerService.createCustomer(createCustomerDto);
     }
 }

@@ -1,6 +1,8 @@
-package com.example.eurder.customers.dto;
+package com.example.eurder.customers;
 
-public class CustomerCreatedDto {
+import java.util.UUID;
+
+public class Customer {
     private final String customerId;
     private final String firstName;
     private final String lastName;
@@ -10,15 +12,14 @@ public class CustomerCreatedDto {
     private final String cityName;
     private final String phoneNumber;
 
-    public CustomerCreatedDto(String customerId,
-                              String firstName,
+    public Customer(String firstName,
                               String lastName,
                               String emailAddress,
                               String streetName,
                               String streetNumber,
                               String cityName,
                               String phoneNumber) {
-        this.customerId = customerId;
+        this.customerId = UUID.randomUUID().toString();
         this.firstName = firstName;
         this.lastName = lastName;
         this.emailAddress = emailAddress;
