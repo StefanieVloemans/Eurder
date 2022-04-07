@@ -24,48 +24,6 @@ public class CustomerControllerUnitTests {
     private CustomerMapper customerMapper;
 
     @Test
-    void GivenEmailAddressWithIncorrectFormat_WhenCreateCustomerIsCalled_ThenBadRequestIsReturnedWithCustomMessage() {
-        //GIVEN
-        CreateCustomerDto customerIncorrectEmailAddress = new CreateCustomerDto.CreateCustomerDtoBuilder("Bart","Simpson","bart@simpsoncom").build();
-
-        //WHEN + THEN
-                RestAssured
-                .given()
-                .body(customerIncorrectEmailAddress)
-                .accept(JSON)
-                .contentType(JSON)
-                .when()
-                .port(port)
-                .post("/customers")
-                .then()
-                .assertThat()
-                .statusCode(HttpStatus.BAD_REQUEST.value());
-    }
-
-    @Test
-    void GivenEmailAddressNotUnique_WhenCreateCustomerIsCalled_ThenBadRequestIsReturnedWithCustomMessage() {
-        //GIVEN
-        CreateCustomerDto alreadyExistingCustomer = new CreateCustomerDto.CreateCustomerDtoBuilder("Bart","Simpson","bart@simpsoncom").build();
-        customerRepository.createCustomer(customerMapper.toCustomer(alreadyExistingCustomer));
-
-        CreateCustomerDto customerWithEmailNotUnique = new CreateCustomerDto.CreateCustomerDtoBuilder("Homer","Simpson","bart@simpsoncom").build();
-
-
-        //WHEN + THEN
-        RestAssured
-                .given()
-                .body(customerWithEmailNotUnique)
-                .accept(JSON)
-                .contentType(JSON)
-                .when()
-                .port(port)
-                .post("/customers")
-                .then()
-                .assertThat()
-                .statusCode(HttpStatus.BAD_REQUEST.value());
-    }
-
-    @Test
     void WhenCreateCustomerIsCalledWithoutProvidingFirstName_ThenBadRequestIsReturnedWithCustomMessage() {
         //GIVEN
         CreateCustomerDto customerWithoutFirstName = new CreateCustomerDto.CreateCustomerDtoBuilder("","Simpson","bart@simpson.com").build();
@@ -93,6 +51,105 @@ public class CustomerControllerUnitTests {
         RestAssured
                 .given()
                 .body(customerWithoutLastName)
+                .accept(JSON)
+                .contentType(JSON)
+                .when()
+                .port(port)
+                .post("/customers")
+                .then()
+                .assertThat()
+                .statusCode(HttpStatus.BAD_REQUEST.value());
+    }
+
+    @Test
+    void WhenCreateCustomerIsCalledWithoutEmailAddress_ThenBadRequestIsReturnedWithCustomMessage() {
+        //GIVEN
+        CreateCustomerDto customerWithoutLastName = new CreateCustomerDto.CreateCustomerDtoBuilder("Bart","Simpson", null).build();
+
+        //WHEN + THEN
+        RestAssured
+                .given()
+                .body(customerWithoutLastName)
+                .accept(JSON)
+                .contentType(JSON)
+                .when()
+                .port(port)
+                .post("/customers")
+                .then()
+                .assertThat()
+                .statusCode(HttpStatus.BAD_REQUEST.value());
+    }
+
+    @Test
+    void WhenCreateCustomerIsCalledWithEmailAddressIsEmpty_ThenBadRequestIsReturnedWithCustomMessage() {
+        //GIVEN
+        CreateCustomerDto customerWithoutLastName = new CreateCustomerDto.CreateCustomerDtoBuilder("Bart","Simpson", "").build();
+
+        //WHEN + THEN
+        RestAssured
+                .given()
+                .body(customerWithoutLastName)
+                .accept(JSON)
+                .contentType(JSON)
+                .when()
+                .port(port)
+                .post("/customers")
+                .then()
+                .assertThat()
+                .statusCode(HttpStatus.BAD_REQUEST.value());
+    }
+
+    @Test
+    void WhenCreateCustomerIsCalledWithEmailAddressIsBlank_ThenBadRequestIsReturnedWithCustomMessage() {
+        //GIVEN
+        CreateCustomerDto customerWithoutLastName = new CreateCustomerDto.CreateCustomerDtoBuilder("Bart","Simpson", " ").build();
+
+        //WHEN + THEN
+        RestAssured
+                .given()
+                .body(customerWithoutLastName)
+                .accept(JSON)
+                .contentType(JSON)
+                .when()
+                .port(port)
+                .post("/customers")
+                .then()
+                .assertThat()
+                .statusCode(HttpStatus.BAD_REQUEST.value());
+    }
+
+    @Test
+    void GivenEmailAddressWithIncorrectFormat_WhenCreateCustomerIsCalled_ThenBadRequestIsReturnedWithCustomMessage() {
+        //GIVEN
+        CreateCustomerDto customerIncorrectEmailAddress = new CreateCustomerDto.CreateCustomerDtoBuilder("Bart","Simpson","bart@simpsoncom").build();
+
+        //WHEN + THEN
+        RestAssured
+                .given()
+                .body(customerIncorrectEmailAddress)
+                .accept(JSON)
+                .contentType(JSON)
+                .when()
+                .port(port)
+                .post("/customers")
+                .then()
+                .assertThat()
+                .statusCode(HttpStatus.BAD_REQUEST.value());
+    }
+
+    @Test
+    void GivenEmailAddressNotUnique_WhenCreateCustomerIsCalled_ThenBadRequestIsReturnedWithCustomMessage() {
+        //GIVEN
+        CreateCustomerDto alreadyExistingCustomer = new CreateCustomerDto.CreateCustomerDtoBuilder("Bart","Simpson","bart@simpson.com").build();
+        customerRepository.createCustomer(customerMapper.toCustomer(alreadyExistingCustomer));
+
+        CreateCustomerDto customerWithEmailNotUnique = new CreateCustomerDto.CreateCustomerDtoBuilder("Homer","Simpson","bart@simpson.com").build();
+
+
+        //WHEN + THEN
+        RestAssured
+                .given()
+                .body(customerWithEmailNotUnique)
                 .accept(JSON)
                 .contentType(JSON)
                 .when()

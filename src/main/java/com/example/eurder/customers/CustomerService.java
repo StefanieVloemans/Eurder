@@ -31,12 +31,12 @@ public class CustomerService {
     }
 
     private void validateIfFirstAndLastNameArePresent(CreateCustomerDto createCustomerDto) {
-        if (createCustomerDto.getFirstName().isBlank() || createCustomerDto.getFirstName().isEmpty() || createCustomerDto.getFirstName() == null) {
+        if (createCustomerDto.getFirstName() == null || createCustomerDto.getFirstName().isBlank() || createCustomerDto.getFirstName().isEmpty()) {
             logger.error(new FirstNameNotProvidedException().getMessage());
             throw new FirstNameNotProvidedException();
         }
 
-        if (createCustomerDto.getLastName().isBlank() || createCustomerDto.getLastName().isEmpty() || createCustomerDto.getLastName() == null) {
+        if (createCustomerDto.getLastName() == null || createCustomerDto.getLastName().isBlank() || createCustomerDto.getLastName().isEmpty()) {
             logger.error(new LastNameNotProvidedException().getMessage());
             throw new LastNameNotProvidedException();
         }
