@@ -44,10 +44,6 @@ class CustomerControllerIntegrationTest {
         Assertions.assertThat(newCustomer.getLastName()).isNotNull().isNotBlank().isNotEmpty();
         Assertions.assertThat(newCustomer.getEmailAddress()).isEqualTo(customerToCreate.getEmailAddress());
         Assertions.assertThat(newCustomer.getEmailAddress()).isNotNull().isNotBlank().isNotEmpty();
-        Assertions.assertThat(newCustomer.getStreetName()).isEqualTo(customerToCreate.getStreetName());
-        Assertions.assertThat(newCustomer.getStreetNumber()).isEqualTo(customerToCreate.getStreetNumber());
-        Assertions.assertThat(newCustomer.getCityName()).isEqualTo(customerToCreate.getCityName());
-        Assertions.assertThat(newCustomer.getPhoneNumber()).isEqualTo(customerToCreate.getPhoneNumber());
         Assertions.assertThat(newCustomer.getCustomerId()).isNotNull();
     }
 }

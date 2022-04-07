@@ -12,7 +12,7 @@ public class CreateCustomerDto {
     public CreateCustomerDto() {
     }
 
-    private CreateCustomerDto(CreateCustomerDto builder) {
+    private CreateCustomerDto(CreateCustomerDtoBuilder builder) {
         this.firstName = builder. firstName;
         this.lastName = builder.lastName;
         this.emailAddress = builder.emailAddress;
@@ -90,7 +90,7 @@ public class CreateCustomerDto {
         }
 
         public CreateCustomerDto build() {
-            return new CreateCustomerDto();
+            return new CreateCustomerDto(this);
         }
     }
 }
