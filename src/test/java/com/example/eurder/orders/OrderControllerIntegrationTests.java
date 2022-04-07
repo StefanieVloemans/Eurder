@@ -24,9 +24,7 @@ class OrderControllerIntegrationTests {
 
     @Test
     void givenOneOrMoreItemGroups_WhenPlaceOrderIsCalled_ThenOrderIsAddedInDatabase() {
-       PlaceOrderDto placeOrderDto = new PlaceOrderDto(new ArrayList<ItemGroup>(List.of(
-               new ItemGroup("1", 2),
-               new ItemGroup("2",5))));
+       PlaceOrderDto placeOrderDto = new PlaceOrderDto(new ItemGroup[]{new ItemGroup("1", 2), new ItemGroup("2",5)});
 
         OrderPlacedDto orderPlaced= RestAssured
                 .given()
