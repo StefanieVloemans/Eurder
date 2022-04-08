@@ -21,4 +21,8 @@ public class ItemRepository {
     public Optional<Item> checkIfItemNameAlreadyExists(Item item) {
         return itemDatabase.checkIfItemNameAlreadyExists(item);
     }
+
+    public Optional<Item> checkIfItemIdIsKnown(String itemId) {
+        return itemDatabase.checkIfItemIdIsKnown(itemId);
+    }
 }

@@ -20,7 +20,7 @@ public class ItemControllerUnitTests {
     private ItemRepository itemRepository;
 
     @Test
-    void givenItemNameNotUnique_WhenAddItemIsCalled_ThenBadRequestIsReturnedWithCustomMessage() {
+    void givenItemNameNotUnique_WhenAddItemIsCalled_ThenBadRequestIsReturned() {
         Item alreadyExistingItem = new Item("Donut", "sweety sweetness", 3.99, 10);
         itemRepository.addItem(alreadyExistingItem);
 
@@ -41,7 +41,7 @@ public class ItemControllerUnitTests {
     }
 
     @Test
-    void WhenAddItemIsCalledWithoutItemNameProvided_ThenBadRequestIsReturnedWithCustomMessage() {
+    void WhenAddItemIsCalledWithoutItemNameProvided_ThenBadRequestIsReturned() {
         Item itemWithoutName = new Item(null, "sweety sweetness", 3.99, 10);
 
         //WHEN + THEN
@@ -59,7 +59,7 @@ public class ItemControllerUnitTests {
     }
 
     @Test
-    void WhenAddItemIsCalledWithNameEmpty_ThenBadRequestIsReturnedWithCustomMessage() {
+    void WhenAddItemIsCalledWithNameEmpty_ThenBadRequestIsReturned() {
         Item itemWithoutName = new Item("", "sweety sweetness", 3.99, 10);
 
         //WHEN + THEN
@@ -77,7 +77,7 @@ public class ItemControllerUnitTests {
     }
 
     @Test
-    void WhenAddItemIsCalledWithNameBlank_ThenBadRequestIsReturnedWithCustomMessage() {
+    void WhenAddItemIsCalledWithNameBlank_ThenBadRequestIsReturned() {
         Item itemWithoutName = new Item(" ", "sweety sweetness", 3.99, 10);
 
         //WHEN + THEN
@@ -95,7 +95,7 @@ public class ItemControllerUnitTests {
     }
 
     @Test
-    void WhenAddItemIsCalledWithoutDescriptionProvided_ThenBadRequestIsReturnedWithCustomMessage() {
+    void WhenAddItemIsCalledWithoutDescriptionProvided_ThenBadRequestIsReturned() {
         Item itemWithoutName = new Item("donut", null, 3.99, 10);
 
         //WHEN + THEN
@@ -113,7 +113,7 @@ public class ItemControllerUnitTests {
     }
 
     @Test
-    void WhenAddItemIsCalledWithDescriptionEmpty_ThenBadRequestIsReturnedWithCustomMessage() {
+    void WhenAddItemIsCalledWithDescriptionEmpty_ThenBadRequestIsReturned() {
         Item itemWithoutName = new Item("Donut", "", 3.99, 10);
 
         //WHEN + THEN
@@ -131,7 +131,7 @@ public class ItemControllerUnitTests {
     }
 
     @Test
-    void WhenAddItemIsCalledWithDescriptionBlank_ThenBadRequestIsReturnedWithCustomMessage() {
+    void WhenAddItemIsCalledWithDescriptionBlank_ThenBadRequestIsReturned() {
         Item itemWithoutName = new Item("Donut", " ", 3.99, 10);
 
         //WHEN + THEN
@@ -149,7 +149,7 @@ public class ItemControllerUnitTests {
     }
 
     @Test
-    void WhenAddItemIsCalledWithoutPriceProvided_ThenBadRequestIsReturnedWithCustomMessage() {
+    void WhenAddItemIsCalledWithoutPriceProvided_ThenBadRequestIsReturned() {
         Item itemWithoutName = new Item("donut", "description",0, 10);
 
         //WHEN + THEN
@@ -167,7 +167,7 @@ public class ItemControllerUnitTests {
     }
 
     @Test
-    void WhenAddItemIsCalledWithNegativePrive_ThenBadRequestIsReturnedWithCustomMessage() {
+    void WhenAddItemIsCalledWithNegativePrive_ThenBadRequestIsReturned() {
         Item itemWithoutName = new Item("donut", "description",-1, 10);
 
         //WHEN + THEN
@@ -185,7 +185,7 @@ public class ItemControllerUnitTests {
     }
 
     @Test
-    void WhenAddItemIsCalledWithNegativeAmount_ThenBadRequestIsReturnedWithCustomMessage() {
+    void WhenAddItemIsCalledWithNegativeAmount_ThenBadRequestIsReturned() {
         Item itemWithoutName = new Item("Donut", "description", 3.99, -1);
 
         //WHEN + THEN

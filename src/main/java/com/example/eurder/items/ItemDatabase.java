@@ -20,4 +20,10 @@ public class ItemDatabase {
                 .filter(item -> item.getItemName().equalsIgnoreCase(itemToCheck.getItemName()))
                 .findFirst();
     }
+
+    public Optional<Item> checkIfItemIdIsKnown(String itemId) {
+        return itemDatabase.values().stream()
+                .filter(item -> item.getItemId().equalsIgnoreCase(itemId))
+                .findFirst();
+    }
 }
