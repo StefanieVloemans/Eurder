@@ -25,4 +25,8 @@ public class ItemRepository {
     public Optional<Item> checkIfItemIdIsKnown(String itemId) {
         return itemDatabase.checkIfItemIdIsKnown(itemId);
     }
+
+    public int getAmountByItemId(String itemId) {
+        return itemDatabase.getAmountByItemId(itemId);
+    }
 }

@@ -1,4 +1,4 @@
-package com.example.eurder.orders;
+package com.example.eurder.orders.exceptions;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;

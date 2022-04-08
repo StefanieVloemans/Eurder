@@ -9,12 +9,13 @@ public class ItemGroup {
     private final int amount;
     private final LocalDate shippingDate;
 
-    public ItemGroup(String itemId, int amount) {
+    public ItemGroup(String itemId, int amount, LocalDate shippingDate) {
         this.itemGroupId = UUID.randomUUID().toString();
         this.itemId = itemId;
         this.amount = amount;
-        shippingDate = LocalDate.now();
+        this.shippingDate = shippingDate;
     }
+
 
     public String getItemId() {
         return itemId;

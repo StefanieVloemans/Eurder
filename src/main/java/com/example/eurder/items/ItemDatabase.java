@@ -26,4 +26,9 @@ public class ItemDatabase {
                 .filter(item -> item.getItemId().equalsIgnoreCase(itemId))
                 .findFirst();
     }
+
+    public int getAmountByItemId(String itemId) {
+
+        return itemDatabase.get(itemId).getAmount();
+    }
 }

@@ -5,6 +5,7 @@ import com.example.eurder.items.ItemService;
 import com.example.eurder.orders.dtos.ItemGroupDto;
 import com.example.eurder.orders.dtos.OrderDto;
 import com.example.eurder.orders.dtos.PlaceOrderDto;
+import com.example.eurder.orders.exceptions.ItemIdIncorrectException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -25,13 +26,10 @@ public class OrderService {
     }
 
     public OrderDto placeOrder(PlaceOrderDto placeOrderDto) {
-
-
-        Order order = orderMapper.toOrder(placeOrderDto);
-        List<ItemGroup> itemGroups = order.getItemGroups();
+        List<ItemGroupDto> itemGroupDtos = placeOrderDto.getItemGroupDto();
         boolean isItemPresentInDb = false;
-        for(ItemGroup itemGroup : itemGroups) {
-            if(itemRepository.checkIfItemIdIsKnown(itemGroup.getItemId()).isPresent()) {
+        for(ItemGroupDto itemGroupDto : itemGroupDtos) {
+            if(itemRepository.checkIfItemIdIsKnown(itemGroupDto.getItemId()).isPresent()) {
                 isItemPresentInDb = true;
             }
         }
@@ -40,6 +38,7 @@ public class OrderService {
             throw new ItemIdIncorrectException();
         }
 
+        Order order = orderMapper.toOrder(placeOrderDto);
         return orderMapper.toOrderDto(orderRepository.placeOrder(order));
     }
 }

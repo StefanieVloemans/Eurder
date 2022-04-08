@@ -31,9 +31,11 @@ class OrderControllerIntegrationTests {
 
     @Test
     void givenOneOrMoreItemGroups_WhenPlaceOrderIsCalled_ThenOrderIsAddedInDatabase() {
-       Item existingItem = new Item("item1","description1", 5.99, 5);
-       itemRepository.addItem(existingItem);
-        PlaceOrderDto placeOrderDto = new PlaceOrderDto(List.of(new ItemGroupDto(existingItem.getItemId(), 2), new ItemGroupDto("2",5)));
+       Item existingItem1 = new Item("item1","description1", 5.99, 5);
+       itemRepository.addItem(existingItem1);
+        Item existingItem2 = new Item("item2","description2", 3.99, 3);
+        itemRepository.addItem(existingItem2);
+        PlaceOrderDto placeOrderDto = new PlaceOrderDto(List.of(new ItemGroupDto(existingItem1.getItemId(), 2), new ItemGroupDto(existingItem2.getItemId(),5)));
 
         OrderDto order = RestAssured
                 .given()
