@@ -1,7 +1,7 @@
 package com.example.eurder.customers;
 
 import com.example.eurder.customers.dtos.CreateCustomerDto;
-import com.example.eurder.customers.dtos.CustomerCreatedDto;
+import com.example.eurder.customers.dtos.CustomerDto;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
@@ -17,7 +17,7 @@ public class CustomerController {
 
     @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
-    public CustomerCreatedDto createCustomer(@RequestBody CreateCustomerDto createCustomerDto){
+    public CustomerDto createCustomer(@RequestBody CreateCustomerDto createCustomerDto){
         return customerService.createCustomer(createCustomerDto);
     }
 }

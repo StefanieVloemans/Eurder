@@ -1,5 +1,6 @@
 package com.example.eurder.orders;
 
+import com.example.eurder.orders.dtos.OrderDto;
 import com.example.eurder.orders.dtos.PlaceOrderDto;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -15,9 +16,9 @@ public class OrderController {
         this.orderService = orderService;
     }
 
-    @PostMapping (consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
-    public double placeOrder(@RequestBody PlaceOrderDto placeOrderDto) {
+    public OrderDto placeOrder(@RequestBody PlaceOrderDto placeOrderDto) {
         return orderService.placeOrder(placeOrderDto);
     }
 }

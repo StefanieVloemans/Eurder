@@ -1,7 +1,7 @@
 package com.example.eurder.customers;
 
 import com.example.eurder.customers.dtos.CreateCustomerDto;
-import com.example.eurder.customers.dtos.CustomerCreatedDto;
+import com.example.eurder.customers.dtos.CustomerDto;
 import io.restassured.RestAssured;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -24,7 +24,7 @@ class CustomerControllerIntegrationTests {
         CreateCustomerDto customerToCreate = new CreateCustomerDto.CreateCustomerDtoBuilder("Bart","Simpson","bart@simpson.com").build();
 
         //WHEN
-        CustomerCreatedDto newCustomer = RestAssured
+        CustomerDto newCustomer = RestAssured
                 .given()
                 .body(customerToCreate)
                 .accept(JSON)
@@ -36,7 +36,7 @@ class CustomerControllerIntegrationTests {
                 .assertThat()
                 .statusCode(HttpStatus.CREATED.value())
                 .extract()
-                .as(CustomerCreatedDto.class);
+                .as(CustomerDto.class);
         //THEN
         Assertions.assertThat(newCustomer.getFirstName()).isEqualTo(customerToCreate.getFirstName());
         Assertions.assertThat(newCustomer.getFirstName()).isNotNull().isNotBlank().isNotEmpty();

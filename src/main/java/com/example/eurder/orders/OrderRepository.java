@@ -2,8 +2,6 @@ package com.example.eurder.orders;
 
 import org.springframework.stereotype.Repository;
 
-import java.util.Properties;
-
 @Repository
 public class OrderRepository {
     private final OrderDatabase orderDatabase;
@@ -12,7 +10,7 @@ public class OrderRepository {
         this.orderDatabase = orderDatabase;
     }
 
-    public double placeOrder(Order order) {
+    public Order placeOrder(Order order) {
         return orderDatabase.saveOrder(order);
     }
 }

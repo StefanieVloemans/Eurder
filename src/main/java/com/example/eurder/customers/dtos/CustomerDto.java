@@ -1,9 +1,6 @@
 package com.example.eurder.customers.dtos;
 
-import com.example.eurder.customers.Customer;
-import com.example.eurder.customers.CustomerMapper;
-
-public class CustomerCreatedDto {
+public class CustomerDto {
     private final String customerId;
     private final String firstName;
     private final String lastName;
@@ -13,7 +10,7 @@ public class CustomerCreatedDto {
     private String cityName;
     private String phoneNumber;
 
-    public CustomerCreatedDto(String customerId, String firstName, String lastName, String emailAddress) {
+    public CustomerDto(String customerId, String firstName, String lastName, String emailAddress) {
         this.customerId = customerId;
         this.firstName = firstName;
         this.lastName = lastName;

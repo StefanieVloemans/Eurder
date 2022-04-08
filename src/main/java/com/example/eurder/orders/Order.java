@@ -5,9 +5,9 @@ import java.util.UUID;
 
 public class Order {
     private final String orderId;
-    private final ItemGroup[] itemGroupList;
+    private final List<ItemGroup> itemGroupList;
 
-    public Order(ItemGroup[] itemGroupList) {
+    public Order(List<ItemGroup> itemGroupList){
         this.itemGroupList = itemGroupList;
         this.orderId = UUID.randomUUID().toString();
     }
@@ -16,7 +16,7 @@ public class Order {
         return orderId;
     }
 
-    public ItemGroup[] getItemGroupList() {
+    public List<ItemGroup> getItemGroups() {
         return itemGroupList;
     }
 }

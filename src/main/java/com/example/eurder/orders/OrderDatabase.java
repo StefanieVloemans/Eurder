@@ -8,8 +8,8 @@ import java.util.concurrent.ConcurrentHashMap;
 public class OrderDatabase {
     private final ConcurrentHashMap<String, Order> orderDatabase = new ConcurrentHashMap<>();
 
-    public double saveOrder(Order order) {
+    public Order saveOrder(Order order) {
         orderDatabase.put(order.getOrderId(), order);
-        return 0;
+        return orderDatabase.get(order.getOrderId());
     }
 }

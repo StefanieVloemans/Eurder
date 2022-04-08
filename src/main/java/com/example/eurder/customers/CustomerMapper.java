@@ -1,7 +1,7 @@
 package com.example.eurder.customers;
 
 import com.example.eurder.customers.dtos.CreateCustomerDto;
-import com.example.eurder.customers.dtos.CustomerCreatedDto;
+import com.example.eurder.customers.dtos.CustomerDto;
 import org.springframework.stereotype.Component;
 
 import java.util.UUID;
@@ -16,8 +16,8 @@ public class CustomerMapper {
                 customerToCreate.getEmailAddress()).build();
     }
 
-    public CustomerCreatedDto toCustomerCreatedDto(Customer customer) {
-        return new CustomerCreatedDto(customer.getCustomerId(),
+    public CustomerDto toCustomerCreatedDto(Customer customer) {
+        return new CustomerDto(customer.getCustomerId(),
                 customer.getFirstName(),
                 customer.getLastName(),
                 customer.getEmailAddress());

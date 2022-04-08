@@ -1,5 +1,6 @@
 package com.example.eurder.orders;
 
+import com.example.eurder.orders.dtos.OrderDto;
 import com.example.eurder.orders.dtos.PlaceOrderDto;
 import org.springframework.stereotype.Service;
 
@@ -13,8 +14,8 @@ public class OrderService {
         this.orderRepository = orderRepository;
     }
 
-    public double placeOrder(PlaceOrderDto placeOrderDto) {
+    public OrderDto placeOrder(PlaceOrderDto placeOrderDto) {
         Order order = orderMapper.toOrder(placeOrderDto);
-        return orderRepository.placeOrder(order);
+        return orderMapper.toOrderDto(orderRepository.placeOrder(order));
     }
 }

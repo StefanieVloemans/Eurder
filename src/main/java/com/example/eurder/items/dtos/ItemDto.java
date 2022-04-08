@@ -1,13 +1,13 @@
 package com.example.eurder.items.dtos;
 
-public class ItemAddedDto {
+public class ItemDto {
     private final String itemId;
     private final String itemName;
     private final String itemDescription;
     private final double price;
     private final int amount;
 
-    public ItemAddedDto(String itemId, String itemName, String itemDescription, double price, int amount) {
+    public ItemDto(String itemId, String itemName, String itemDescription, double price, int amount) {
         this.itemId = itemId;
         this.itemName = itemName;
         this.itemDescription = itemDescription;

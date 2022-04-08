@@ -1,7 +1,7 @@
 package com.example.eurder.items;
 
 import com.example.eurder.items.dtos.AddItemDto;
-import com.example.eurder.items.dtos.ItemAddedDto;
+import com.example.eurder.items.dtos.ItemDto;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
@@ -17,7 +17,7 @@ public class ItemController {
 
     @PostMapping (produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
-    public ItemAddedDto addItem(@RequestBody AddItemDto addItemDto) {
+    public ItemDto addItem(@RequestBody AddItemDto addItemDto) {
         return itemService.addItem(addItemDto);
     }
 }

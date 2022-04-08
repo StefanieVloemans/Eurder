@@ -1,18 +1,18 @@
 package com.example.eurder.orders.dtos;
 
-import com.example.eurder.orders.ItemGroup;
-
-import java.util.ArrayList;
 import java.util.List;
 
 public class PlaceOrderDto {
-    private final ItemGroup[] itemGroups;
+    private List<ItemGroupDto> itemGroupDto;
 
-    public PlaceOrderDto(ItemGroup[] itemGroups) {
-        this.itemGroups = itemGroups;
+    public PlaceOrderDto(List<ItemGroupDto> itemGroupDto) {
+        this.itemGroupDto = itemGroupDto;
     }
 
-    public ItemGroup[] getItemGroups() {
-        return itemGroups;
+    public PlaceOrderDto() {
+    }
+
+    public List<ItemGroupDto> getItemGroupDto() {
+        return itemGroupDto;
     }
 }

@@ -1,7 +1,7 @@
 package com.example.eurder.items;
 
 import com.example.eurder.items.dtos.AddItemDto;
-import com.example.eurder.items.dtos.ItemAddedDto;
+import com.example.eurder.items.dtos.ItemDto;
 import com.example.eurder.items.exceptions.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,7 +19,7 @@ public class ItemService {
         this.itemRepository = itemRepository;
     }
 
-    public ItemAddedDto addItem(AddItemDto addItemDto) {
+    public ItemDto addItem(AddItemDto addItemDto) {
         logger.info("method addItem is called");
 
         checkIfProvidedInputIsCompleteAndCorrect(addItemDto);

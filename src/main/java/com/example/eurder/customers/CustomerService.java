@@ -1,7 +1,7 @@
 package com.example.eurder.customers;
 
 import com.example.eurder.customers.dtos.CreateCustomerDto;
-import com.example.eurder.customers.dtos.CustomerCreatedDto;
+import com.example.eurder.customers.dtos.CustomerDto;
 import com.example.eurder.customers.exceptions.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,7 +18,7 @@ public class CustomerService {
         this.customerMapper = customerMapper;
     }
 
-    public CustomerCreatedDto createCustomer(CreateCustomerDto createCustomerDto) {
+    public CustomerDto createCustomer(CreateCustomerDto createCustomerDto) {
         logger.info("method createCustomer is called");
         Customer customerToCreate = customerMapper.toCustomer(createCustomerDto);
 

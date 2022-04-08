@@ -1,7 +1,7 @@
 package com.example.eurder.items;
 
 import com.example.eurder.items.dtos.AddItemDto;
-import com.example.eurder.items.dtos.ItemAddedDto;
+import com.example.eurder.items.dtos.ItemDto;
 import io.restassured.RestAssured;
 
 import org.assertj.core.api.Assertions;
@@ -23,7 +23,7 @@ class ItemControllerIntegrationTests {
     void givenItemDetails_WhenAddItemIsCalled_ThenNewItemIsAddedInDatabase() {
         AddItemDto addItemDto = new AddItemDto("Donut", "Sweet snack with hole in the middle", 19.99, 50);
 
-        ItemAddedDto addedItemDto = RestAssured
+        ItemDto addedItemDto = RestAssured
                 .given()
                 .body(addItemDto)
                 .accept(JSON)
@@ -35,7 +35,7 @@ class ItemControllerIntegrationTests {
                 .assertThat()
                 .statusCode(HttpStatus.CREATED.value())
                 .extract()
-                .as(ItemAddedDto.class);
+                .as(ItemDto.class);
 
         org.junit.jupiter.api.Assertions.assertFalse(addedItemDto.getItemId().isEmpty());
         org.junit.jupiter.api.Assertions.assertFalse(addedItemDto.getItemId().isBlank());
