@@ -31,4 +31,15 @@ public class ItemDatabase {
 
         return itemDatabase.get(itemId).getAmount();
     }
+
+    public void reduceAmountAfterOrder(String itemId, int amountToSubstract) {
+        int newAmount = itemDatabase.get(itemId).getAmount() - amountToSubstract;
+
+        itemDatabase.put(itemId, new Item(
+                itemDatabase.get(itemId).getItemName(),
+                itemDatabase.get(itemId).getItemDescription(),
+                itemDatabase.get(itemId).getPrice(),
+                newAmount));
+
+    }
 }

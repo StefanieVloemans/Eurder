@@ -1,6 +1,5 @@
 package com.example.eurder.items;
 
-import com.example.eurder.items.dtos.AddItemDto;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
@@ -28,5 +27,9 @@ public class ItemRepository {
 
     public int getAmountByItemId(String itemId) {
         return itemDatabase.getAmountByItemId(itemId);
+    }
+
+    public void reduceAmountAfterOrder(String itemId, int amount) {
+        itemDatabase.reduceAmountAfterOrder(itemId, amount);
     }
 }

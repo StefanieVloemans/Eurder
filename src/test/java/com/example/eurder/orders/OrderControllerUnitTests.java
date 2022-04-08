@@ -99,4 +99,55 @@ public class OrderControllerUnitTests {
         Assertions.assertThat(order.getItemGroupList().get(0).getShippingDate()).isEqualTo(LocalDate.now().plusWeeks(1));
     }
 
+    @Test
+    void givenAmount_WhenPlaceOrderIsCalled_ThenItemAmountIsSubstractedWithOrderedAmount() {
+        Item existingItem = new Item("item1","description1", 5.99, 3);
+        itemRepository.addItem(existingItem);
+
+        ItemGroupDto itemGroup1 = new ItemGroupDto(existingItem.getItemId(), 2);
+
+        PlaceOrderDto placeOrderDto = new PlaceOrderDto(List.of(itemGroup1));
+
+        OrderDto order = RestAssured
+                .given()
+                .body(placeOrderDto)
+                .accept(JSON)
+                .contentType(JSON)
+                .when()
+                .port(port)
+                .post("/orders")
+                .then()
+                .assertThat()
+                .statusCode(HttpStatus.CREATED.value())
+                .extract()
+                .as(OrderDto.class);
+
+        Assertions.assertThat(itemRepository.getAmountByItemId(existingItem.getItemId())).isEqualTo(1);
+    }
+
+//    @Test
+//    void given1ItemGroup_WhenPlaceOrderIsCalled_ThenCorrectPriceIsReturned() {
+//        Item existingItem = new Item("item1","description1", 5.99, 3);
+//        itemRepository.addItem(existingItem);
+//
+//        ItemGroupDto itemGroup1 = new ItemGroupDto(existingItem.getItemId(), 2);
+//
+//        PlaceOrderDto placeOrderDto = new PlaceOrderDto(List.of(itemGroup1));
+//
+//        OrderDto order = RestAssured
+//                .given()
+//                .body(placeOrderDto)
+//                .accept(JSON)
+//                .contentType(JSON)
+//                .when()
+//                .port(port)
+//                .post("/orders")
+//                .then()
+//                .assertThat()
+//                .statusCode(HttpStatus.CREATED.value())
+//                .extract()
+//                .as(OrderDto.class);
+//
+//        Assertions.assertThat(itemRepository.getAmountByItemId(existingItem.getItemId())).isEqualTo(1);
+//    }
 }

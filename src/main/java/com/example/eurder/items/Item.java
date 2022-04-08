@@ -36,4 +36,5 @@ public class Item {
     public int getAmount() {
         return amount;
     }
+
 }
