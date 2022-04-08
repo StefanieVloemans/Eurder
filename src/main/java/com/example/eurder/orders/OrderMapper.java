@@ -24,7 +24,11 @@ public class OrderMapper {
         for (ItemGroupDto itemGroupDto : placeOrderDto.getItemGroupDto()) {
             itemGroups.add(this.toItemGroup(itemGroupDto));
         }
-        return new Order(itemGroups);
+        double totalPrice = 0;
+        for (ItemGroupDto itemGroupDto : placeOrderDto.getItemGroupDto()) {
+            totalPrice = itemGroupDto.getAmount() * itemRepository.getPriceByItemId(itemGroupDto.getItemId());
+        }
+        return new Order(totalPrice, itemGroups);
     }
 
     private ItemGroup toItemGroup(ItemGroupDto itemGroupDto) {
@@ -40,6 +44,6 @@ public class OrderMapper {
     }
 
     public OrderDto toOrderDto(Order order) {
-        return new OrderDto(0, order.getItemGroups());
+        return new OrderDto(order.getTotalPrice(), order.getItemGroups());
     }
 }

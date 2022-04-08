@@ -14,7 +14,7 @@ public class OrderDto {
     }
 
     public double getTotalPrice() {
-        return 0;
+        return totalPrice;
     }
 
     public List<ItemGroup> getItemGroupList() {

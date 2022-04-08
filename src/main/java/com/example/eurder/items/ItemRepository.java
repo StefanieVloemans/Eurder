@@ -29,7 +29,13 @@ public class ItemRepository {
         return itemDatabase.getAmountByItemId(itemId);
     }
 
+    public double getPriceByItemId(String itemId) {
+        return itemDatabase.getPriceByItemId(itemId);
+    }
+
     public void reduceAmountAfterOrder(String itemId, int amount) {
         itemDatabase.reduceAmountAfterOrder(itemId, amount);
     }
+
+
 }

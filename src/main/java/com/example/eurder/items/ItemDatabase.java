@@ -28,8 +28,11 @@ public class ItemDatabase {
     }
 
     public int getAmountByItemId(String itemId) {
-
         return itemDatabase.get(itemId).getAmount();
+    }
+
+    public double getPriceByItemId(String itemId) {
+        return itemDatabase.get(itemId).getPrice();
     }
 
     public void reduceAmountAfterOrder(String itemId, int amountToSubstract) {
@@ -42,4 +45,6 @@ public class ItemDatabase {
                 newAmount));
 
     }
+
+
 }
