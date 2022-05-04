@@ -14,9 +14,9 @@ public class ItemMapper {
     }
 
     public ItemDto toItemAddedDto(Item item) {
-        return new ItemDto(item.getItemId(),
-                item.getItemName(),
-                item.getItemDescription(),
+        return new ItemDto(item.getId(),
+                item.getName(),
+                item.getDescription(),
                 item.getPrice(),
                 item.getAmount());
     }

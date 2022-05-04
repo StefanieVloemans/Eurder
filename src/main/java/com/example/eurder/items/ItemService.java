@@ -7,7 +7,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
+
 @Service
+@Transactional
 public class ItemService {
 
     private final ItemMapper itemMapper;
@@ -55,7 +58,7 @@ public class ItemService {
     }
 
     private void validateIfItemNameAlreadyExists(Item itemToAdd) {
-        if (itemRepository.checkIfItemNameAlreadyExists(itemToAdd).isPresent()) {
+        if (itemRepository.doesItemNameAlreadyExist(itemToAdd)) {
             logger.error(new ItemWithThisNameAlreadyExistsException().getMessage());
             throw new ItemWithThisNameAlreadyExistsException();
         }

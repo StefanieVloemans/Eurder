@@ -1,4 +1,4 @@
-package com.example.eurder.orders.dtos;
+package com.example.eurder.item_group.dtos;
 
 public class ItemGroupDto {
     private final String itemId;

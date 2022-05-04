@@ -1,8 +1,10 @@
 package com.example.eurder.orders;
 
+import com.example.eurder.customers.Customer;
+import com.example.eurder.customers.CustomerRepository;
 import com.example.eurder.items.Item;
 import com.example.eurder.items.ItemRepository;
-import com.example.eurder.orders.dtos.ItemGroupDto;
+import com.example.eurder.item_group.dtos.ItemGroupDto;
 import com.example.eurder.orders.dtos.OrderDto;
 import com.example.eurder.orders.dtos.PlaceOrderDto;
 import io.restassured.RestAssured;
@@ -29,9 +31,14 @@ public class OrderControllerUnitTests {
     @Autowired
     ItemRepository itemRepository;
 
+    @Autowired
+    CustomerRepository customerRepository;
+
     @Test
     void givenAnIncorrectItemId_WhenPlaceOrderIsCalled_ThenBadRequestIsThrown() {
-        PlaceOrderDto placeOrderDto = new PlaceOrderDto(List.of(new ItemGroupDto("1", 2), new ItemGroupDto("2", 5)));
+        Customer existingCustomer = new Customer.CustomerBuilder("1","Alex","Turner","alex@turner.be").build();
+        customerRepository.createCustomer(existingCustomer);
+        PlaceOrderDto placeOrderDto = new PlaceOrderDto(List.of(new ItemGroupDto("1", 2), new ItemGroupDto("2", 5)), existingCustomer.getId());
 
         RestAssured
                 .given()
@@ -52,11 +59,12 @@ public class OrderControllerUnitTests {
         Item existingItem = new Item("item1","description1", 5.99, 3);
         itemRepository.addItem(existingItem);
 
-        ItemGroupDto itemGroup1 = new ItemGroupDto(existingItem.getItemId(), 1);
+        ItemGroupDto itemGroup1 = new ItemGroupDto(existingItem.getId(), 1);
+        Customer existingCustomer = new Customer.CustomerBuilder("1","Alex","Turner","alex@turner.be").build();
+        customerRepository.createCustomer(existingCustomer);
+        PlaceOrderDto placeOrderDto = new PlaceOrderDto(List.of(itemGroup1), existingCustomer.getId());
 
-        PlaceOrderDto placeOrderDto = new PlaceOrderDto(List.of(itemGroup1));
-
-        OrderDto order = RestAssured
+        OrderDto actualOrderDto = RestAssured
                 .given()
                 .body(placeOrderDto)
                 .accept(JSON)
@@ -70,7 +78,10 @@ public class OrderControllerUnitTests {
                 .extract()
                 .as(OrderDto.class);
 
-        Assertions.assertThat(order.getItemGroupList().get(0).getShippingDate()).isEqualTo(LocalDate.now().plusDays(1));
+//        Assertions.assertThat(actualOrderDto.getItemGroupList().get(0).getShippingDate()).isEqualTo(LocalDate.now().plusDays(1));
+        Assertions.assertThat(actualOrderDto.getItemGroupList().get(0).getShippingDate()
+                .isEqual(LocalDate.now().plusDays(1)));
+
     }
 
     @Test
@@ -78,11 +89,12 @@ public class OrderControllerUnitTests {
         Item existingItem = new Item("item1","description1", 5.99, 1);
         itemRepository.addItem(existingItem);
 
-        ItemGroupDto itemGroup1 = new ItemGroupDto(existingItem.getItemId(), 3);
+        ItemGroupDto itemGroup1 = new ItemGroupDto(existingItem.getId(), 3);
+        Customer existingCustomer = new Customer.CustomerBuilder("1","Alex","Turner","alex@turner.be").build();
+        customerRepository.createCustomer(existingCustomer);
+        PlaceOrderDto placeOrderDto = new PlaceOrderDto(List.of(itemGroup1), existingCustomer.getId());
 
-        PlaceOrderDto placeOrderDto = new PlaceOrderDto(List.of(itemGroup1));
-
-        OrderDto order = RestAssured
+        OrderDto orderDto = RestAssured
                 .given()
                 .body(placeOrderDto)
                 .accept(JSON)
@@ -96,19 +108,25 @@ public class OrderControllerUnitTests {
                 .extract()
                 .as(OrderDto.class);
 
-        Assertions.assertThat(order.getItemGroupList().get(0).getShippingDate()).isEqualTo(LocalDate.now().plusWeeks(1));
+        Assertions.assertThat(orderDto.getItemGroupList().get(0).getShippingDate()).isEqualTo(LocalDate.now().plusWeeks(1));
     }
 
     @Test
     void givenAmount_WhenPlaceOrderIsCalled_ThenItemAmountIsSubstractedWithOrderedAmount() {
+//        Item existingItem = new Item("item1","description1", 5.99, 3);
+//        itemRepository.addItem(existingItem);
+//        ItemGroupDto itemGroup1 = new ItemGroupDto(existingItem.getId(), 2);
+//        Customer existingCustomer = new Customer.CustomerBuilder("1","Alex","Turner","alex@turner.be").build();
+//        customerRepository.createCustomer(existingCustomer);
+//        PlaceOrderDto placeOrderDto = new PlaceOrderDto(List.of(itemGroup1), existingCustomer.getId());
         Item existingItem = new Item("item1","description1", 5.99, 3);
         itemRepository.addItem(existingItem);
 
-        ItemGroupDto itemGroup1 = new ItemGroupDto(existingItem.getItemId(), 2);
-
-        PlaceOrderDto placeOrderDto = new PlaceOrderDto(List.of(itemGroup1));
-
-        OrderDto order = RestAssured
+        ItemGroupDto itemGroup1 = new ItemGroupDto(existingItem.getId(), 2);
+        Customer existingCustomer = new Customer.CustomerBuilder("1","Alex","Turner","alex@turner.be").build();
+        customerRepository.createCustomer(existingCustomer);
+        PlaceOrderDto placeOrderDto = new PlaceOrderDto(List.of(itemGroup1), existingCustomer.getId());
+        OrderDto orderDto = RestAssured
                 .given()
                 .body(placeOrderDto)
                 .accept(JSON)
@@ -122,7 +140,9 @@ public class OrderControllerUnitTests {
                 .extract()
                 .as(OrderDto.class);
 
-        Assertions.assertThat(itemRepository.getAmountByItemId(existingItem.getItemId())).isEqualTo(1);
+//        Assertions.assertThat(itemRepository.findById(orderDto.getItemGroupList().get(0).getItem().getId()).
+//                getAmount()).isEqualTo(1);
+        Assertions.assertThat(orderDto.getItemGroupList().get(0).getItem().getAmount()).isEqualTo(1);
     }
 
     @Test
@@ -133,9 +153,10 @@ public class OrderControllerUnitTests {
         Item existingItem = new Item("item1","description1", itemGroupPrice, 4);
         itemRepository.addItem(existingItem);
 
-        ItemGroupDto itemGroup1 = new ItemGroupDto(existingItem.getItemId(), itemGroupAmount);
-
-        PlaceOrderDto placeOrderDto = new PlaceOrderDto(List.of(itemGroup1));
+        ItemGroupDto itemGroup1 = new ItemGroupDto(existingItem.getId(), itemGroupAmount);
+        Customer existingCustomer = new Customer.CustomerBuilder("1","Alex","Turner","alex@turner.be").build();
+        customerRepository.createCustomer(existingCustomer);
+        PlaceOrderDto placeOrderDto = new PlaceOrderDto(List.of(itemGroup1), existingCustomer.getId());
 
         OrderDto order = RestAssured
                 .given()

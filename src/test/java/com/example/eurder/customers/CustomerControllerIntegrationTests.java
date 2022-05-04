@@ -39,6 +39,7 @@ class CustomerControllerIntegrationTests {
                 .as(CustomerDto.class);
         //THEN
         Assertions.assertThat(newCustomer.getFirstName()).isEqualTo(customerToCreate.getFirstName());
+        // Next line redundant:
         Assertions.assertThat(newCustomer.getFirstName()).isNotNull().isNotBlank().isNotEmpty();
         Assertions.assertThat(newCustomer.getLastName()).isEqualTo(customerToCreate.getLastName());
         Assertions.assertThat(newCustomer.getLastName()).isNotNull().isNotBlank().isNotEmpty();

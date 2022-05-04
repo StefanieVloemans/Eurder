@@ -7,7 +7,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
+
+
 @Service
+@Transactional
 public class CustomerService {
     private final CustomerRepository customerRepository;
     private final CustomerMapper customerMapper;
@@ -25,8 +29,9 @@ public class CustomerService {
         validateIfFirstAndLastNameArePresent(createCustomerDto);
         validateEmailAddress(createCustomerDto, customerToCreate);
 
+        CustomerDto customerDto = customerMapper.toCustomerCreatedDto(customerRepository.createCustomer(customerToCreate));
         logger.info("newly created customer is returned to client");
-        return customerMapper.toCustomerCreatedDto(customerRepository.createCustomer(customerToCreate));
+        return customerDto;
     }
 
     private void validateIfFirstAndLastNameArePresent(CreateCustomerDto createCustomerDto) {
@@ -53,7 +58,7 @@ public class CustomerService {
             throw new IncorrectEmailFormatException();
         }
 
-        if(customerRepository.checkIfEmailAddressAlreadyExists(customerToCreate).isPresent()){
+        if(customerRepository.doesEmailAddressAlreadyExist(customerToCreate)){
             logger.error(new EmailNotUniqueException(createCustomerDto.getEmailAddress()).getMessage());
             throw new EmailNotUniqueException(createCustomerDto.getEmailAddress());
         }

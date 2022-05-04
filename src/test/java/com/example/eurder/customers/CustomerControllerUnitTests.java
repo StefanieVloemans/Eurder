@@ -121,7 +121,9 @@ public class CustomerControllerUnitTests {
     @Test
     void GivenEmailAddressWithIncorrectFormat_WhenCreateCustomerIsCalled_ThenBadRequestIsReturnedWithCustomMessage() {
         //GIVEN
-        CreateCustomerDto customerIncorrectEmailAddress = new CreateCustomerDto.CreateCustomerDtoBuilder("Bart","Simpson","bart@simpsoncom").build();
+        CreateCustomerDto customerIncorrectEmailAddress = new CreateCustomerDto.CreateCustomerDtoBuilder("Bart",
+                "Simpson",
+                "bart@simpsoncom").build();
 
         //WHEN + THEN
         RestAssured
@@ -140,10 +142,14 @@ public class CustomerControllerUnitTests {
     @Test
     void GivenEmailAddressNotUnique_WhenCreateCustomerIsCalled_ThenBadRequestIsReturnedWithCustomMessage() {
         //GIVEN
-        CreateCustomerDto alreadyExistingCustomer = new CreateCustomerDto.CreateCustomerDtoBuilder("Bart","Simpson","bart@simpson.com").build();
+        CreateCustomerDto alreadyExistingCustomer = new CreateCustomerDto.CreateCustomerDtoBuilder("Bart",
+                "Simpson",
+                "bart@simpson.com").build();
         customerRepository.createCustomer(customerMapper.toCustomer(alreadyExistingCustomer));
 
-        CreateCustomerDto customerDuplicateEmailAddress = new CreateCustomerDto.CreateCustomerDtoBuilder("Homer","Simpson","bart@simpson.com").build();
+        CreateCustomerDto customerDuplicateEmailAddress = new CreateCustomerDto.CreateCustomerDtoBuilder("Homer",
+                "Simpson",
+                "bart@simpson.com").build();
 
         //WHEN + THEN
         RestAssured

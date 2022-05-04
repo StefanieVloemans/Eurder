@@ -2,15 +2,18 @@ package com.example.eurder.orders;
 
 import org.springframework.stereotype.Repository;
 
-@Repository
-public class OrderRepository {
-    private final OrderDatabase orderDatabase;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.transaction.Transactional;
 
-    public OrderRepository(OrderDatabase orderDatabase) {
-        this.orderDatabase = orderDatabase;
-    }
+@Repository
+@Transactional
+public class OrderRepository {
+    @PersistenceContext
+    EntityManager entityManager;
 
     public Order placeOrder(Order order) {
-        return orderDatabase.saveOrder(order);
+        entityManager.persist(order);
+        return order;
     }
 }
