@@ -6,7 +6,6 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
 import java.util.List;
-import java.util.Optional;
 
 @Repository
 @Transactional
@@ -29,6 +28,14 @@ public class CustomerRepository {
         .setParameter("emailaddress", customer.getEmailAddress())
                  .getResultList();
          return customerList.size() > 0;
+    }
+
+    public boolean noSuchCustomerId(String customerId) {
+        List<Customer> customerList = entityManager.createQuery("select c from Customer c where c.id = :id", Customer.class)
+                .setParameter("id", customerId)
+                .getResultList();
+
+        return customerList.size() < 1;
     }
 
     public Customer findById(String customerId) {

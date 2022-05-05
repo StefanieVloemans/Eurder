@@ -9,9 +9,10 @@ import com.example.eurder.items.Item;
 import com.example.eurder.items.ItemRepository;
 import com.example.eurder.items.ItemService;
 import com.example.eurder.item_group.dtos.ItemGroupDto;
+import com.example.eurder.items.ItemSpringDataRepository;
 import com.example.eurder.orders.dtos.OrderDto;
 import com.example.eurder.orders.dtos.PlaceOrderDto;
-import com.example.eurder.orders.exceptions.ItemIdIncorrectException;
+import com.example.eurder.orders.exceptions.IdIncorrectException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -28,22 +29,25 @@ public class OrderService {
     private final ItemGroupMapper itemGroupMapper;
     private final OrderRepository orderRepository;
     private final ItemRepository itemRepository;
+    private final ItemSpringDataRepository itemSpringDataRepository;
     private final Logger logger = LoggerFactory.getLogger(ItemService.class);
     private final CustomerRepository customerRepository;
 
-    public OrderService(OrderMapper orderMapper, ItemGroupMapper itemGroupMapper, OrderRepository orderRepository, ItemRepository itemRepository, CustomerRepository customerRepository) {
+    public OrderService(OrderMapper orderMapper, ItemGroupMapper itemGroupMapper, OrderRepository orderRepository, ItemRepository itemRepository, ItemSpringDataRepository itemSpringDataRepository, CustomerRepository customerRepository) {
         this.orderMapper = orderMapper;
         this.itemGroupMapper = itemGroupMapper;
         this.orderRepository = orderRepository;
         this.itemRepository = itemRepository;
+        this.itemSpringDataRepository = itemSpringDataRepository;
         this.customerRepository = customerRepository;
     }
 
     public OrderDto placeOrder(PlaceOrderDto placeOrderDto) {
-        List<ItemGroupDto> itemGroupDtos = placeOrderDto.getItemGroupDto();
-        itemGroupValidation(itemGroupDtos);
+        logger.info("Place Order method is called");
 
-        double totalPrice = calculateOrderPrice(itemGroupDtos);
+        inputValidation(placeOrderDto);
+
+        double totalPrice = calculateOrderPrice(placeOrderDto.getItemGroupDto());
         List<ItemGroup> itemGroupList = fromItemGroupDtoListToItemGroupList(placeOrderDto);
         Customer customer = customerRepository.findById(placeOrderDto.getCustomerId());
         Order order = orderMapper.toOrder(itemGroupList, customer, totalPrice);
@@ -51,10 +55,7 @@ public class OrderService {
         orderRepository.placeOrder(order);
         OrderDto orderDtoToReturn = orderMapper.toOrderDto(order);
 
-        for (ItemGroup itemGroup : itemGroupList) {
-            Item item = itemGroup.getItem();
-            item.setAmount(item.getAmount() - itemGroup.getAmount());
-        }
+        extractOrderAmountFromItemAmount(itemGroupList);
 
         logger.info("Order placing is finished, returning orderDto to client");
         return orderDtoToReturn;
@@ -71,16 +72,29 @@ public class OrderService {
         return itemGroupList;
     }
 
-    private void itemGroupValidation(List<ItemGroupDto> itemGroupDtos) {
+    private void inputValidation(PlaceOrderDto placeOrderDto) {
+
+        if (customerRepository.noSuchCustomerId(placeOrderDto.getCustomerId())) {
+            Infrastructure.logAndThrowError(new IdIncorrectException("customer"));
+        }
+
         boolean isItemPresentInDb = false;
-        for (ItemGroupDto itemGroupDto : itemGroupDtos) {
+        for (ItemGroupDto itemGroupDto : placeOrderDto.getItemGroupDto()) {
             if (itemRepository.isItemIdKnown(itemGroupDto.getItemId())) {
                 isItemPresentInDb = true;
             }
         }
         if (!isItemPresentInDb) {
-            Infrastructure.logAndThrowError(new ItemIdIncorrectException());
+            Infrastructure.logAndThrowError(new IdIncorrectException("item"));
         }
+    }
+
+    public double calculateOrderPrice(List<ItemGroupDto> itemGroupDtoList) {
+        double totalPrice = 0;
+        for (ItemGroupDto itemGroupDto : itemGroupDtoList) {
+            totalPrice += itemGroupDto.getAmount() * itemRepository.findById(itemGroupDto.getItemId()).getPrice();
+        }
+        return totalPrice;
     }
 
     public LocalDate calculateShippingDate(ItemGroupDto itemGroupDto) {
@@ -93,11 +107,10 @@ public class OrderService {
         return shippingDate;
     }
 
-    public double calculateOrderPrice(List<ItemGroupDto> itemGroupDtoList) {
-        double totalPrice = 0;
-        for (ItemGroupDto itemGroupDto : itemGroupDtoList) {
-            totalPrice = itemGroupDto.getAmount() * itemRepository.findById(itemGroupDto.getItemId()).getPrice();
+    private void extractOrderAmountFromItemAmount(List<ItemGroup> itemGroupList) {
+        for (ItemGroup itemGroup : itemGroupList) {
+            Item item = itemGroup.getItem();
+            item.setAmount(item.getAmount() - itemGroup.getAmount());
         }
-        return totalPrice;
     }
 }

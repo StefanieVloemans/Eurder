@@ -1,11 +1,11 @@
 package com.example.eurder.items.dtos;
 
 public class ItemDto {
-    private final String itemId;
-    private final String itemName;
-    private final String itemDescription;
-    private final double price;
-    private final int amount;
+    private String itemId;
+    private String itemName;
+    private String itemDescription;
+    private double price;
+    private int amount;
 
     public ItemDto(String itemId, String itemName, String itemDescription, double price, int amount) {
         this.itemId = itemId;
@@ -13,6 +13,9 @@ public class ItemDto {
         this.itemDescription = itemDescription;
         this.price = price;
         this.amount = amount;
+    }
+
+    public ItemDto() {
     }
 
     public String getItemId() {

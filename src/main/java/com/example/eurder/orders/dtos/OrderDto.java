@@ -6,12 +6,16 @@ import java.util.List;
 
 public class OrderDto {
     private String id;
-    private final double totalPrice;
-    private final List<ItemGroup> itemGroupList;
+    private double totalPrice;
+    private List<ItemGroup> itemGroupList;
 
     public OrderDto(String id, double totalPrice, List<ItemGroup> itemGroupList) {
+        this.id = id;
         this.totalPrice = totalPrice;
         this.itemGroupList = itemGroupList;
+    }
+
+    public OrderDto() {
     }
 
     public String getId() {

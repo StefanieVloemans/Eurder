@@ -7,21 +7,21 @@ import javax.persistence.Table;
 import java.util.UUID;
 
 @Entity
-@Table (name = "ITEM")
+@Table (name = "item")
 public class Item {
     @Id
     private String id;
 
-    @Column(name="NAME")
+    @Column(name="name")
     private String name;
 
-    @Column(name="DESCRIPTION")
+    @Column(name="description")
     private String description;
 
-    @Column(name="PRICE")
+    @Column(name="price")
     private double price;
 
-    @Column(name="AMOUNT")
+    @Column(name="amount")
     private int amount;
 
     public Item() {
@@ -58,6 +58,8 @@ public class Item {
     public void setAmount(int amount) {
         this.amount = amount;
     }
+
+
 
     @Override
     public String toString() {

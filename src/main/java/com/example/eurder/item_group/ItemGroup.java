@@ -8,19 +8,19 @@ import java.time.LocalDate;
 import java.util.UUID;
 
 @Entity
-@Table(name ="ITEM_GROUP")
+@Table(name = "item_group")
 public class ItemGroup {
     @Id
     private String id;
 
-    @ManyToOne (cascade = CascadeType.PERSIST)
-    @JoinColumn (name="FK_ITEM_ID")
+    @ManyToOne
+    @JoinColumn(name = "fk_item_id")
     private Item item;
 
-    @Column (name="AMOUNT")
+    @Column(name = "amount")
     private int amount;
 
-    @Column(name="SHIPPING_DATE")
+    @Column(name = "shipping_date")
     private LocalDate shippingDate;
 
     public ItemGroup(Item item, int amount, LocalDate shippingDate) {
@@ -48,7 +48,6 @@ public class ItemGroup {
     public LocalDate getShippingDate() {
         return shippingDate;
     }
-
 
     @Override
     public String toString() {

@@ -12,9 +12,12 @@ public class OrderRepository {
     @PersistenceContext
     EntityManager entityManager;
 
-    public Order placeOrder(Order order) {
+    public OrderRepository(EntityManager entityManager) {
+        this.entityManager = entityManager;
+    }
+
+    public void placeOrder(Order order) {
         entityManager.persist(order);
-        return order;
     }
 
     public Order findById(String id) {

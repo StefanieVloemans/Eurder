@@ -8,17 +8,17 @@ import java.util.List;
 import java.util.UUID;
 
 @Entity
-@Table(name ="EURDER")
+@Table(name ="order_overview")
 public class Order {
     @Id
     private String id;
 
-    @OneToMany (cascade = CascadeType.PERSIST)
-    @JoinColumn(name="FK_EURDER_ID")
+    @OneToMany (cascade = CascadeType.ALL)
+    @JoinColumn(name="fk_order_id")
     private List<ItemGroup> itemGroupList;
 
-    @ManyToOne (cascade = CascadeType.PERSIST)
-    @JoinColumn(name="FK_CUSTOMER_ID")
+    @ManyToOne
+    @JoinColumn(name="fk_customer_id")
     private Customer customer;
 
     @Transient

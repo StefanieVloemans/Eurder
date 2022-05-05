@@ -1,42 +1,42 @@
-CREATE TABLE POSTALCODE_CITY (
-                                 ID INTEGER PRIMARY KEY,
-                                 ZIPCODE VARCHAR,
-                                 CITY VARCHAR
+create table postalcode_city (
+                                 id integer primary key,
+                                 zipcode varchar,
+                                 city varchar
 );
-CREATE SEQUENCE POSTALCODE_CITY_SEQ START WITH 1 INCREMENT BY 1;
+create sequence postalcode_city_seq start with 1 increment by 1;
 
-CREATE TABLE CUSTOMER (
-                          ID VARCHAR PRIMARY KEY,
-                          FIRST_NAME VARCHAR,
-                          LAST_NAME VARCHAR,
-                          EMAIL_ADDRESS VARCHAR,
-                          STREET_NAME VARCHAR,
-                          STREET_NUMBER VARCHAR,
-                          FK_POSTALCODE_CITY INTEGER,
-                          PHONE_NUMBER VARCHAR,
-                          FOREIGN KEY (FK_POSTALCODE_CITY) REFERENCES POSTALCODE_CITY (ID)
-);
-
-CREATE TABLE ITEM (
-                      ID VARCHAR PRIMARY KEY,
-                      NAME VARCHAR,
-                      DESCRIPTION VARCHAR,
-                      PRICE NUMERIC,
-                      AMOUNT INTEGER
+create table customer (
+                          id varchar primary key,
+                          first_name varchar,
+                          last_name varchar,
+                          email_address varchar,
+                          street_name varchar,
+                          street_number varchar,
+                          fk_postalcode_city integer,
+                          phone_number varchar,
+                          foreign key (fk_postalcode_city) references postalcode_city (id)
 );
 
-CREATE TABLE EURDER (
-                        ID VARCHAR PRIMARY KEY,
-                        CUSTOMER_ID VARCHAR,
-                        FOREIGN KEY (CUSTOMER_ID) REFERENCES CUSTOMER (ID)
+create table item (
+                      id varchar primary key,
+                      name varchar,
+                      description varchar,
+                      price numeric,
+                      amount integer
 );
 
-CREATE TABLE ITEM_GROUP (
-                            ID VARCHAR PRIMARY KEY,
-                            FK_ITEM_ID VARCHAR,
-                            AMOUNT INTEGER,
-                            SHIPPING_DATE DATE,
-                            FK_EURDER_ID VARCHAR,
-                            FOREIGN KEY (FK_ITEM_ID) REFERENCES ITEM (ID),
-                            FOREIGN KEY (FK_EURDER_ID) REFERENCES EURDER (ID)
+create table order_overview (
+                                id varchar primary key,
+                                fk_customer_id varchar,
+                                foreign key (fk_customer_id) references customer (id)
+);
+
+create table item_group (
+                            id varchar primary key,
+                            fk_item_id varchar,
+                            amount integer,
+                            shipping_date date,
+                            fk_order_id varchar,
+                            foreign key (fk_item_id) references item (id),
+                            foreign key (fk_order_id) references order_overview (id)
 );

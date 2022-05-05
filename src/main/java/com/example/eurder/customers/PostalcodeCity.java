@@ -8,7 +8,7 @@ public class PostalcodeCity {
     @Id
     @GeneratedValue
     private int id;
-    @Column(name="ZIP_CODE")
+    @Column(name="ZIPCODE")
     private String zipCode;
 
     @Column(name = "CITY")

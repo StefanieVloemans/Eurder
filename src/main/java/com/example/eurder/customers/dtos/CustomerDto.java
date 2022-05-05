@@ -1,10 +1,10 @@
 package com.example.eurder.customers.dtos;
 
 public class CustomerDto {
-    private final String customerId;
-    private final String firstName;
-    private final String lastName;
-    private final String emailAddress;
+    private String customerId;
+    private String firstName;
+    private String lastName;
+    private String emailAddress;
     private String streetName;
     private String streetNumber;
     private String cityName;
@@ -16,6 +16,9 @@ public class CustomerDto {
         this.lastName = lastName;
         this.emailAddress = emailAddress;
 
+    }
+
+    public CustomerDto() {
     }
 
     public String getCustomerId() {
