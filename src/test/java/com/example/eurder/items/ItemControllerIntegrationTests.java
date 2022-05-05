@@ -1,7 +1,10 @@
 package com.example.eurder.items;
 
+import com.example.eurder.infrastructure.exceptions.InputNotProvidedException;
 import com.example.eurder.items.dtos.AddItemDto;
 import com.example.eurder.items.dtos.ItemDto;
+import com.example.eurder.items.exceptions.InputCannotBeZeroOrNegative;
+import com.example.eurder.items.exceptions.ItemWithThisNameAlreadyExistsException;
 import io.restassured.RestAssured;
 
 import org.assertj.core.api.Assertions;
@@ -21,6 +24,9 @@ import static io.restassured.http.ContentType.JSON;
 class ItemControllerIntegrationTests {
     @LocalServerPort
     private int port;
+
+    @Autowired
+    private ItemService itemService;
 
     @Autowired
     private ItemRepository itemRepository;
@@ -55,16 +61,16 @@ class ItemControllerIntegrationTests {
     @DisplayName("Input Validation tests")
     class InputValidationTest {
         @Test
-        void givenItemNameNotUnique_WhenAddItemIsCalled_ThenBadRequestIsReturned() {
+        void givenItemNameNotUnique_WhenAddItemIsCalled_ThenBadRequestIsReturnedAndExceptionIsThrown() {
             Item alreadyExistingItem = new Item("Donut", "sweety sweetness", 3.99, 10);
             itemRepository.addItem(alreadyExistingItem);
 
-            Item itemDuplicateName = new Item("Donut", "pastry with hole in the middle", 3.59, 5);
+            AddItemDto itemDtoDuplicateName = new AddItemDto("Donut", "pastry with hole in the middle", 3.59, 5);
 
-            //WHEN + THEN
+            //WHEN
             RestAssured
                     .given()
-                    .body(itemDuplicateName)
+                    .body(itemDtoDuplicateName)
                     .accept(JSON)
                     .contentType(JSON)
                     .when()
@@ -73,16 +79,23 @@ class ItemControllerIntegrationTests {
                     .then()
                     .assertThat()
                     .statusCode(HttpStatus.BAD_REQUEST.value());
+
+            Throwable thrown = Assertions.catchThrowable(() -> itemService.addItem(itemDtoDuplicateName));
+
+            //THEN
+            Assertions.assertThat(thrown)
+                    .isInstanceOf(ItemWithThisNameAlreadyExistsException.class)
+                    .hasMessage("An item with this name already exists");
         }
 
         @Test
-        void WhenAddItemIsCalledWithoutItemNameProvided_ThenBadRequestIsReturned() {
-            Item itemWithoutName = new Item(null, "sweety sweetness", 3.99, 10);
+        void WhenAddItemIsCalledWithoutItemNameProvided_ThenBadRequestIsReturnedAndExceptionIsThrown() {
+            AddItemDto itemDtoWithoutName = new AddItemDto(null, "sweety sweetness", 3.99, 10);
 
-            //WHEN + THEN
+            //WHEN
             RestAssured
                     .given()
-                    .body(itemWithoutName)
+                    .body(itemDtoWithoutName)
                     .accept(JSON)
                     .contentType(JSON)
                     .when()
@@ -91,16 +104,23 @@ class ItemControllerIntegrationTests {
                     .then()
                     .assertThat()
                     .statusCode(HttpStatus.BAD_REQUEST.value());
+
+            Throwable thrown = Assertions.catchThrowable(() -> itemService.addItem(itemDtoWithoutName));
+
+            //THEN
+            Assertions.assertThat(thrown)
+                    .isInstanceOf(InputNotProvidedException.class)
+                    .hasMessage("Item name not provided");
         }
 
         @Test
-        void WhenAddItemIsCalledWithNameEmpty_ThenBadRequestIsReturned() {
-            Item itemWithoutName = new Item("", "sweety sweetness", 3.99, 10);
+        void WhenAddItemIsCalledWithNameEmpty_ThenBadRequestIsReturnedAndExceptionIsThrown() {
+            AddItemDto itemDtoWithoutName = new AddItemDto("", "sweety sweetness", 3.99, 10);
 
-            //WHEN + THEN
+            //WHEN
             RestAssured
                     .given()
-                    .body(itemWithoutName)
+                    .body(itemDtoWithoutName)
                     .accept(JSON)
                     .contentType(JSON)
                     .when()
@@ -109,16 +129,23 @@ class ItemControllerIntegrationTests {
                     .then()
                     .assertThat()
                     .statusCode(HttpStatus.BAD_REQUEST.value());
+
+            Throwable thrown = Assertions.catchThrowable(() -> itemService.addItem(itemDtoWithoutName));
+
+            //THEN
+            Assertions.assertThat(thrown)
+                    .isInstanceOf(InputNotProvidedException.class)
+                    .hasMessage("Item name not provided");
         }
 
         @Test
-        void WhenAddItemIsCalledWithNameBlank_ThenBadRequestIsReturned() {
-            Item itemWithoutName = new Item(" ", "sweety sweetness", 3.99, 10);
+        void WhenAddItemIsCalledWithNameBlank_ThenBadRequestIsReturnedAndExceptionIsThrown() {
+            AddItemDto itemDtoWithoutName = new AddItemDto("  ", "sweety sweetness", 3.99, 10);
 
-            //WHEN + THEN
+            //WHEN
             RestAssured
                     .given()
-                    .body(itemWithoutName)
+                    .body(itemDtoWithoutName)
                     .accept(JSON)
                     .contentType(JSON)
                     .when()
@@ -127,16 +154,23 @@ class ItemControllerIntegrationTests {
                     .then()
                     .assertThat()
                     .statusCode(HttpStatus.BAD_REQUEST.value());
+
+            Throwable thrown = Assertions.catchThrowable(() -> itemService.addItem(itemDtoWithoutName));
+
+            //THEN
+            Assertions.assertThat(thrown)
+                    .isInstanceOf(InputNotProvidedException.class)
+                    .hasMessage("Item name not provided");
         }
 
         @Test
-        void WhenAddItemIsCalledWithoutDescriptionProvided_ThenBadRequestIsReturned() {
-            Item itemWithoutName = new Item("donut", null, 3.99, 10);
+        void WhenAddItemIsCalledWithoutDescriptionProvided_ThenBadRequestIsReturnedAndExceptionIsThrown() {
+            AddItemDto itemDtoWithoutDescription = new AddItemDto("donut", null, 3.99, 10);
 
-            //WHEN + THEN
+            //WHEN
             RestAssured
                     .given()
-                    .body(itemWithoutName)
+                    .body(itemDtoWithoutDescription)
                     .accept(JSON)
                     .contentType(JSON)
                     .when()
@@ -145,16 +179,23 @@ class ItemControllerIntegrationTests {
                     .then()
                     .assertThat()
                     .statusCode(HttpStatus.BAD_REQUEST.value());
+
+            Throwable thrown = Assertions.catchThrowable(() -> itemService.addItem(itemDtoWithoutDescription));
+
+            //THEN
+            Assertions.assertThat(thrown)
+                    .isInstanceOf(InputNotProvidedException.class)
+                    .hasMessage("Description not provided");
         }
 
         @Test
-        void WhenAddItemIsCalledWithDescriptionEmpty_ThenBadRequestIsReturned() {
-            Item itemWithoutName = new Item("Donut", "", 3.99, 10);
+        void WhenAddItemIsCalledWithDescriptionEmpty_ThenBadRequestIsReturnedAndExceptionIsThrown() {
+            AddItemDto itemDtoWithoutDescription = new AddItemDto("donut", "", 3.99, 10);
 
-            //WHEN + THEN
+            //WHEN
             RestAssured
                     .given()
-                    .body(itemWithoutName)
+                    .body(itemDtoWithoutDescription)
                     .accept(JSON)
                     .contentType(JSON)
                     .when()
@@ -163,16 +204,23 @@ class ItemControllerIntegrationTests {
                     .then()
                     .assertThat()
                     .statusCode(HttpStatus.BAD_REQUEST.value());
+
+            Throwable thrown = Assertions.catchThrowable(() -> itemService.addItem(itemDtoWithoutDescription));
+
+            //THEN
+            Assertions.assertThat(thrown)
+                    .isInstanceOf(InputNotProvidedException.class)
+                    .hasMessage("Description not provided");
         }
 
         @Test
-        void WhenAddItemIsCalledWithDescriptionBlank_ThenBadRequestIsReturned() {
-            Item itemWithoutName = new Item("Donut", " ", 3.99, 10);
+        void WhenAddItemIsCalledWithDescriptionBlank_ThenBadRequestIsReturnedAndExceptionIsThrown() {
+            AddItemDto itemDtoWithoutDescription = new AddItemDto("donut", " ", 3.99, 10);
 
-            //WHEN + THEN
+            //WHEN
             RestAssured
                     .given()
-                    .body(itemWithoutName)
+                    .body(itemDtoWithoutDescription)
                     .accept(JSON)
                     .contentType(JSON)
                     .when()
@@ -181,16 +229,23 @@ class ItemControllerIntegrationTests {
                     .then()
                     .assertThat()
                     .statusCode(HttpStatus.BAD_REQUEST.value());
+
+            Throwable thrown = Assertions.catchThrowable(() -> itemService.addItem(itemDtoWithoutDescription));
+
+            //THEN
+            Assertions.assertThat(thrown)
+                    .isInstanceOf(InputNotProvidedException.class)
+                    .hasMessage("Description not provided");
         }
 
         @Test
-        void WhenAddItemIsCalledWithoutPriceProvided_ThenBadRequestIsReturned() {
-            Item itemWithoutName = new Item("donut", "description", 0, 10);
+        void WhenAddItemIsCalledWithPriceEqualTo0_ThenBadRequestIsReturnedAndExceptionIsThrown() {
+            AddItemDto itemDtoWithPrice0 = new AddItemDto("donut", "description", 0, 10);
 
             //WHEN + THEN
             RestAssured
                     .given()
-                    .body(itemWithoutName)
+                    .body(itemDtoWithPrice0)
                     .accept(JSON)
                     .contentType(JSON)
                     .when()
@@ -199,16 +254,23 @@ class ItemControllerIntegrationTests {
                     .then()
                     .assertThat()
                     .statusCode(HttpStatus.BAD_REQUEST.value());
+
+            Throwable thrown = Assertions.catchThrowable(() -> itemService.addItem(itemDtoWithPrice0));
+
+            //THEN
+            Assertions.assertThat(thrown)
+                    .isInstanceOf(InputCannotBeZeroOrNegative.class)
+                    .hasMessage("Price cannot be zero or negative");
         }
 
         @Test
-        void WhenAddItemIsCalledWithNegativePrice_ThenBadRequestIsReturned() {
-            Item itemWithoutName = new Item("donut", "description", -1, 10);
+        void WhenAddItemIsCalledWithNegativePrice_ThenBadRequestIsReturnedAndExceptionIsThrown() {
+            AddItemDto itemDtoWithNegativePrice = new AddItemDto("donut", "description", -1, 10);
 
             //WHEN + THEN
             RestAssured
                     .given()
-                    .body(itemWithoutName)
+                    .body(itemDtoWithNegativePrice)
                     .accept(JSON)
                     .contentType(JSON)
                     .when()
@@ -217,16 +279,23 @@ class ItemControllerIntegrationTests {
                     .then()
                     .assertThat()
                     .statusCode(HttpStatus.BAD_REQUEST.value());
+
+            Throwable thrown = Assertions.catchThrowable(() -> itemService.addItem(itemDtoWithNegativePrice));
+
+            //THEN
+            Assertions.assertThat(thrown)
+                    .isInstanceOf(InputCannotBeZeroOrNegative.class)
+                    .hasMessage("Price cannot be zero or negative");
         }
 
         @Test
-        void WhenAddItemIsCalledWithNegativeAmount_ThenBadRequestIsReturned() {
-            Item itemWithoutName = new Item("Donut", "description", 3.99, -1);
+        void WhenAddItemIsCalledWithNegativeAmount_ThenBadRequestIsReturnedAndExceptionIsThrown() {
+            AddItemDto itemDtoWithNegativeAmount = new AddItemDto("Donut", "description", 3.99, -1);
 
             //WHEN + THEN
             RestAssured
                     .given()
-                    .body(itemWithoutName)
+                    .body(itemDtoWithNegativeAmount)
                     .accept(JSON)
                     .contentType(JSON)
                     .when()
@@ -235,6 +304,13 @@ class ItemControllerIntegrationTests {
                     .then()
                     .assertThat()
                     .statusCode(HttpStatus.BAD_REQUEST.value());
+
+            Throwable thrown = Assertions.catchThrowable(() -> itemService.addItem(itemDtoWithNegativeAmount));
+
+            //THEN
+            Assertions.assertThat(thrown)
+                    .isInstanceOf(InputCannotBeZeroOrNegative.class)
+                    .hasMessage("Amount cannot be zero or negative");
         }
     }
 }

@@ -4,6 +4,7 @@ import com.example.eurder.customers.dtos.CreateCustomerDto;
 import com.example.eurder.customers.dtos.CustomerDto;
 import com.example.eurder.customers.exceptions.*;
 import com.example.eurder.infrastructure.Infrastructure;
+import com.example.eurder.infrastructure.exceptions.InputNotProvidedException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;

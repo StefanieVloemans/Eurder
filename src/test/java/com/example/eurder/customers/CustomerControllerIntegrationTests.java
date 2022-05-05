@@ -4,7 +4,7 @@ import com.example.eurder.customers.dtos.CreateCustomerDto;
 import com.example.eurder.customers.dtos.CustomerDto;
 import com.example.eurder.customers.exceptions.EmailNotUniqueException;
 import com.example.eurder.customers.exceptions.IncorrectEmailFormatException;
-import com.example.eurder.customers.exceptions.InputNotProvidedException;
+import com.example.eurder.infrastructure.exceptions.InputNotProvidedException;
 import io.restassured.RestAssured;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;

@@ -1,5 +1,7 @@
 package com.example.eurder.items;
 
+import com.example.eurder.infrastructure.Infrastructure;
+import com.example.eurder.infrastructure.exceptions.InputNotProvidedException;
 import com.example.eurder.items.dtos.AddItemDto;
 import com.example.eurder.items.dtos.ItemDto;
 import com.example.eurder.items.exceptions.*;
@@ -37,23 +39,19 @@ public class ItemService {
 
     private void checkIfProvidedInputIsCompleteAndCorrect(AddItemDto addItemDto) {
         if (addItemDto.getItemName() == null || addItemDto.getItemName().isEmpty() || addItemDto.getItemName().isBlank()) {
-            logger.error(new NoItemProvidedException().getMessage());
-            throw new NoItemProvidedException();
+            Infrastructure.logAndThrowError(new InputNotProvidedException("Item name"));
         }
 
         if (addItemDto.getItemDescription() == null || addItemDto.getItemDescription().isEmpty() || addItemDto.getItemDescription().isBlank()) {
-            logger.error(new NoDescriptionProvidedException().getMessage());
-            throw new NoDescriptionProvidedException();
+            Infrastructure.logAndThrowError(new InputNotProvidedException("Description"));
         }
 
         if (addItemDto.getPrice() <= 0) {
-            logger.error(new InvalidPriceException().getMessage());
-            throw new InvalidPriceException();
+            Infrastructure.logAndThrowError(new InputCannotBeZeroOrNegative("Price"));
         }
 
         if (addItemDto.getAmount() < 0) {
-            logger.error(new InvalidAmountException().getMessage());
-            throw new InvalidAmountException();
+            Infrastructure.logAndThrowError(new InputCannotBeZeroOrNegative("Amount"));
         }
     }
 
