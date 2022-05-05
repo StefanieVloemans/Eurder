@@ -16,6 +16,9 @@ import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.annotation.DirtiesContext;
 
+import java.util.Arrays;
+import java.util.List;
+
 import static io.restassured.http.ContentType.JSON;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -32,6 +35,55 @@ class CustomerControllerIntegrationTests {
 
     @Autowired
     private CustomerRepository customerRepository;
+
+    @Test
+    void getAllCustomers() {
+        //GIVEN
+        CreateCustomerDto customerToCreate1 = new CreateCustomerDto.CreateCustomerDtoBuilder("Bart", "Simpson", "bart@simpson.com").build();
+        customerService.createCustomer(customerToCreate1);
+        CreateCustomerDto customerToCreate2 = new CreateCustomerDto.CreateCustomerDtoBuilder("Homer", "Simpson", "homer@simpson.com").build();
+        customerService.createCustomer(customerToCreate2);
+        //WHEN
+        List<Customer> customerList = Arrays.stream(RestAssured
+                .given()
+                .contentType(JSON)
+                .when()
+                .port(port)
+                .get("/customers")
+                .then()
+                .assertThat()
+                .statusCode(HttpStatus.OK.value())
+                .extract()
+                .as(Customer[].class)).toList();
+
+        //THEN
+        Assertions.assertThat(customerList.stream().filter(customer -> customer.getFirstName().contains("Bart")));
+        Assertions.assertThat(customerList.stream().filter(customer -> customer.getFirstName().contains("Homer")));
+    }
+
+    @Test
+    void getCustomer() {
+        //GIVEN
+        CreateCustomerDto customerToCreate1 = new CreateCustomerDto.CreateCustomerDtoBuilder("Marge", "Simpson", "bart@simpson.com").setStreetName("Springfield Street").setStreetNumber("1")
+                .setCityName("Springfield").build();
+        customerService.createCustomer(customerToCreate1);
+        //WHEN
+        List<Customer> customerList = Arrays.stream(RestAssured
+                .given()
+                .contentType(JSON)
+                .when()
+                .port(port)
+                .get("/customers")
+                .then()
+                .assertThat()
+                .statusCode(HttpStatus.OK.value())
+                .extract()
+                .as(Customer[].class)).toList();
+
+        //THEN
+        Assertions.assertThat(customerList.stream().filter(customer -> customer.getFirstName().contains("Marge")));
+        Assertions.assertThat(customerList.stream().filter(customer -> customer.getStreetName().contains("Springfield Street")));
+    }
 
     @Test
     void givenCustomerDetails_WhenCreateCustomerIsCalled_ThenNewCustomerIsAddedInDatabaseClass() {
@@ -234,7 +286,7 @@ class CustomerControllerIntegrationTests {
                 String alreadyExistingEmailAddress = "bart@simpson.com";
                 CreateCustomerDto alreadyExistingCustomer = new CreateCustomerDto.CreateCustomerDtoBuilder("Bart",
                         "Simpson", alreadyExistingEmailAddress
-                        ).build();
+                ).build();
                 customerRepository.createCustomer(customerMapper.toCustomer(alreadyExistingCustomer));
 
                 CreateCustomerDto customerDuplicateEmailAddress = new CreateCustomerDto.CreateCustomerDtoBuilder("Homer",

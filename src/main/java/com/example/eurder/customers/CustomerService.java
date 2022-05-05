@@ -2,6 +2,8 @@ package com.example.eurder.customers;
 
 import com.example.eurder.customers.dtos.CreateCustomerDto;
 import com.example.eurder.customers.dtos.CustomerDto;
+import com.example.eurder.customers.dtos.ViewAllCustomersDto;
+import com.example.eurder.customers.dtos.ViewCustomerDto;
 import com.example.eurder.customers.exceptions.*;
 import com.example.eurder.infrastructure.Infrastructure;
 import com.example.eurder.infrastructure.exceptions.InputNotProvidedException;
@@ -10,6 +12,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.List;
 
 
 @Service
@@ -22,6 +25,22 @@ public class CustomerService {
     public CustomerService(CustomerRepository customerRepository, CustomerMapper customerMapper) {
         this.customerRepository = customerRepository;
         this.customerMapper = customerMapper;
+    }
+
+    public ViewCustomerDto getCustomer(String id) {
+        logger.info("method getCustomer is called");
+        Customer customer = customerRepository.findById(id);
+        ViewCustomerDto viewCustomerDto = customerMapper.toViewCustomerDto(customer);
+        logger.info("returning customer (viewCustomerDto) to client");
+        return viewCustomerDto;
+    }
+
+    public  List<ViewAllCustomersDto> getAllCustomers() {
+        logger.info("method getAllCustomers is called");
+        List<Customer> customerList = customerRepository.findAllCustomer();
+        List<ViewAllCustomersDto> viewAllCustomersDtoList = customerMapper.toViewAllCustomersDtoList(customerList);
+        logger.info("returning list of customers (list of ViewAllCustomersDto) to client");
+        return viewAllCustomersDtoList;
     }
 
     public CustomerDto createCustomer(CreateCustomerDto createCustomerDto) {
@@ -62,4 +81,6 @@ public class CustomerService {
             throw new EmailNotUniqueException(createCustomerDto.getEmailAddress());
         }
     }
+
+
 }

@@ -41,4 +41,9 @@ public class CustomerRepository {
     public Customer findById(String customerId) {
         return entityManager.find(Customer.class, customerId);
     }
+
+    public List<Customer> findAllCustomer() {
+        return entityManager.createQuery("select c from Customer c")
+                .getResultList();
+    }
 }
