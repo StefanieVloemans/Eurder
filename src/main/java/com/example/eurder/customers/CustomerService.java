@@ -3,6 +3,7 @@ package com.example.eurder.customers;
 import com.example.eurder.customers.dtos.CreateCustomerDto;
 import com.example.eurder.customers.dtos.CustomerDto;
 import com.example.eurder.customers.exceptions.*;
+import com.example.eurder.infrastructure.Infrastructure;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -36,29 +37,26 @@ public class CustomerService {
 
     private void validateIfFirstAndLastNameArePresent(CreateCustomerDto createCustomerDto) {
         if (createCustomerDto.getFirstName() == null || createCustomerDto.getFirstName().isBlank() || createCustomerDto.getFirstName().isEmpty()) {
-            logger.error(new FirstNameNotProvidedException().getMessage());
-            throw new FirstNameNotProvidedException();
+            Infrastructure.logAndThrowError(new InputNotProvidedException("First name"));
         }
 
         if (createCustomerDto.getLastName() == null || createCustomerDto.getLastName().isBlank() || createCustomerDto.getLastName().isEmpty()) {
-            logger.error(new LastNameNotProvidedException().getMessage());
-            throw new LastNameNotProvidedException();
+            Infrastructure.logAndThrowError(new InputNotProvidedException("Last name"));
         }
     }
 
     private void validateEmailAddress(CreateCustomerDto createCustomerDto, Customer customerToCreate) {
-        if(createCustomerDto.getEmailAddress() == null) {
-            logger.error(new NoEmailProvidedException().getMessage());
-            throw new NoEmailProvidedException();
+        if (createCustomerDto.getEmailAddress() == null || createCustomerDto.getEmailAddress().isBlank() || createCustomerDto.getEmailAddress().isEmpty() ) {
+            Infrastructure.logAndThrowError(new InputNotProvidedException("Email address"));
         }
 
         // Check on email address copied from Digibuggy
-        if(!createCustomerDto.getEmailAddress().matches("^(\\S+)@(\\S+)\\.([a-zA-Z]+)$")) {
+        if (!createCustomerDto.getEmailAddress().matches("^(\\S+)@(\\S+)\\.([a-zA-Z]+)$")) {
             logger.error(new IncorrectEmailFormatException().getMessage());
             throw new IncorrectEmailFormatException();
         }
 
-        if(customerRepository.doesEmailAddressAlreadyExist(customerToCreate)){
+        if (customerRepository.doesEmailAddressAlreadyExist(customerToCreate)) {
             logger.error(new EmailNotUniqueException(createCustomerDto.getEmailAddress()).getMessage());
             throw new EmailNotUniqueException(createCustomerDto.getEmailAddress());
         }

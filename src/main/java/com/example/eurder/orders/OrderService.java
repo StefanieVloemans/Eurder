@@ -9,7 +9,6 @@ import com.example.eurder.items.Item;
 import com.example.eurder.items.ItemRepository;
 import com.example.eurder.items.ItemService;
 import com.example.eurder.item_group.dtos.ItemGroupDto;
-import com.example.eurder.items.ItemSpringDataRepository;
 import com.example.eurder.orders.dtos.OrderDto;
 import com.example.eurder.orders.dtos.PlaceOrderDto;
 import com.example.eurder.orders.exceptions.IdIncorrectException;
@@ -29,16 +28,14 @@ public class OrderService {
     private final ItemGroupMapper itemGroupMapper;
     private final OrderRepository orderRepository;
     private final ItemRepository itemRepository;
-    private final ItemSpringDataRepository itemSpringDataRepository;
     private final Logger logger = LoggerFactory.getLogger(ItemService.class);
     private final CustomerRepository customerRepository;
 
-    public OrderService(OrderMapper orderMapper, ItemGroupMapper itemGroupMapper, OrderRepository orderRepository, ItemRepository itemRepository, ItemSpringDataRepository itemSpringDataRepository, CustomerRepository customerRepository) {
+    public OrderService(OrderMapper orderMapper, ItemGroupMapper itemGroupMapper, OrderRepository orderRepository, ItemRepository itemRepository, CustomerRepository customerRepository) {
         this.orderMapper = orderMapper;
         this.itemGroupMapper = itemGroupMapper;
         this.orderRepository = orderRepository;
         this.itemRepository = itemRepository;
-        this.itemSpringDataRepository = itemSpringDataRepository;
         this.customerRepository = customerRepository;
     }
 

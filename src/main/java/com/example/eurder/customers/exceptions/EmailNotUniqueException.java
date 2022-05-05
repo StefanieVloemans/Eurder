@@ -6,6 +6,6 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 @ResponseStatus(HttpStatus.BAD_REQUEST)
 public class EmailNotUniqueException extends RuntimeException {
     public EmailNotUniqueException(String emailAddress) {
-        super("Email address " +  " is already linked to a customer account");
+        super("Email address " + emailAddress + " is already linked to a customer account");
     }
 }

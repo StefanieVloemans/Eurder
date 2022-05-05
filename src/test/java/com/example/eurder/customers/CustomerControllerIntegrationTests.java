@@ -2,6 +2,9 @@ package com.example.eurder.customers;
 
 import com.example.eurder.customers.dtos.CreateCustomerDto;
 import com.example.eurder.customers.dtos.CustomerDto;
+import com.example.eurder.customers.exceptions.EmailNotUniqueException;
+import com.example.eurder.customers.exceptions.IncorrectEmailFormatException;
+import com.example.eurder.customers.exceptions.InputNotProvidedException;
 import io.restassured.RestAssured;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
@@ -22,10 +25,13 @@ class CustomerControllerIntegrationTests {
     private int port;
 
     @Autowired
-    private CustomerRepository customerRepository;
+    private CustomerService customerService;
 
     @Autowired
     private CustomerMapper customerMapper;
+
+    @Autowired
+    private CustomerRepository customerRepository;
 
     @Test
     void givenCustomerDetails_WhenCreateCustomerIsCalled_ThenNewCustomerIsAddedInDatabaseClass() {
@@ -65,7 +71,7 @@ class CustomerControllerIntegrationTests {
             //GIVEN
             CreateCustomerDto customerWithoutFirstName = new CreateCustomerDto.CreateCustomerDtoBuilder("", "Simpson", "bart@simpson.com").build();
 
-            //WHEN + THEN
+            //WHEN
             RestAssured
                     .given()
                     .body(customerWithoutFirstName)
@@ -77,6 +83,13 @@ class CustomerControllerIntegrationTests {
                     .then()
                     .assertThat()
                     .statusCode(HttpStatus.BAD_REQUEST.value());
+
+            Throwable thrown = Assertions.catchThrowable(() -> customerService.createCustomer(customerWithoutFirstName));
+
+            //THEN
+            Assertions.assertThat(thrown)
+                    .isInstanceOf(InputNotProvidedException.class)
+                    .hasMessage("First name not provided");
         }
 
         @Test
@@ -84,7 +97,7 @@ class CustomerControllerIntegrationTests {
             //GIVEN
             CreateCustomerDto customerWithoutLastName = new CreateCustomerDto.CreateCustomerDtoBuilder("Bart", "", "bart@simpson.com").build();
 
-            //WHEN + THEN
+            //WHEN
             RestAssured
                     .given()
                     .body(customerWithoutLastName)
@@ -96,6 +109,13 @@ class CustomerControllerIntegrationTests {
                     .then()
                     .assertThat()
                     .statusCode(HttpStatus.BAD_REQUEST.value());
+
+            Throwable thrown = Assertions.catchThrowable(() -> customerService.createCustomer(customerWithoutLastName));
+
+            //THEN
+            Assertions.assertThat(thrown)
+                    .isInstanceOf(InputNotProvidedException.class)
+                    .hasMessage("Last name not provided");
         }
 
         @Nested
@@ -105,12 +125,12 @@ class CustomerControllerIntegrationTests {
             @Test
             void WhenCreateCustomerIsCalledWithoutEmailAddress_ThenBadRequestIsReturnedWithCustomMessage() {
                 //GIVEN
-                CreateCustomerDto customerWithoutLastName = new CreateCustomerDto.CreateCustomerDtoBuilder("Bart", "Simpson", null).build();
+                CreateCustomerDto customerWithoutEmailAddress = new CreateCustomerDto.CreateCustomerDtoBuilder("Bart", "Simpson", null).build();
 
                 //WHEN + THEN
                 RestAssured
                         .given()
-                        .body(customerWithoutLastName)
+                        .body(customerWithoutEmailAddress)
                         .accept(JSON)
                         .contentType(JSON)
                         .when()
@@ -119,17 +139,24 @@ class CustomerControllerIntegrationTests {
                         .then()
                         .assertThat()
                         .statusCode(HttpStatus.BAD_REQUEST.value());
+
+                Throwable thrown = Assertions.catchThrowable(() -> customerService.createCustomer(customerWithoutEmailAddress));
+
+                //THEN
+                Assertions.assertThat(thrown)
+                        .isInstanceOf(InputNotProvidedException.class)
+                        .hasMessage("Email address not provided");
             }
 
             @Test
             void WhenCreateCustomerIsCalledWithEmailAddressIsEmpty_ThenBadRequestIsReturnedWithCustomMessage() {
                 //GIVEN
-                CreateCustomerDto customerWithoutLastName = new CreateCustomerDto.CreateCustomerDtoBuilder("Bart", "Simpson", "").build();
+                CreateCustomerDto customerWithoutEmailAddress = new CreateCustomerDto.CreateCustomerDtoBuilder("Bart", "Simpson", "").build();
 
                 //WHEN + THEN
                 RestAssured
                         .given()
-                        .body(customerWithoutLastName)
+                        .body(customerWithoutEmailAddress)
                         .accept(JSON)
                         .contentType(JSON)
                         .when()
@@ -138,17 +165,24 @@ class CustomerControllerIntegrationTests {
                         .then()
                         .assertThat()
                         .statusCode(HttpStatus.BAD_REQUEST.value());
+
+                Throwable thrown = Assertions.catchThrowable(() -> customerService.createCustomer(customerWithoutEmailAddress));
+
+                //THEN
+                Assertions.assertThat(thrown)
+                        .isInstanceOf(InputNotProvidedException.class)
+                        .hasMessage("Email address not provided");
             }
 
             @Test
             void WhenCreateCustomerIsCalledWithEmailAddressIsBlank_ThenBadRequestIsReturnedWithCustomMessage() {
                 //GIVEN
-                CreateCustomerDto customerWithoutLastName = new CreateCustomerDto.CreateCustomerDtoBuilder("Bart", "Simpson", " ").build();
+                CreateCustomerDto customerWithoutEmailAddress = new CreateCustomerDto.CreateCustomerDtoBuilder("Bart", "Simpson", " ").build();
 
                 //WHEN + THEN
                 RestAssured
                         .given()
-                        .body(customerWithoutLastName)
+                        .body(customerWithoutEmailAddress)
                         .accept(JSON)
                         .contentType(JSON)
                         .when()
@@ -157,6 +191,13 @@ class CustomerControllerIntegrationTests {
                         .then()
                         .assertThat()
                         .statusCode(HttpStatus.BAD_REQUEST.value());
+
+                Throwable thrown = Assertions.catchThrowable(() -> customerService.createCustomer(customerWithoutEmailAddress));
+
+                //THEN
+                Assertions.assertThat(thrown)
+                        .isInstanceOf(InputNotProvidedException.class)
+                        .hasMessage("Email address not provided");
             }
 
             @Test
@@ -178,19 +219,27 @@ class CustomerControllerIntegrationTests {
                         .then()
                         .assertThat()
                         .statusCode(HttpStatus.BAD_REQUEST.value());
+
+                Throwable thrown = Assertions.catchThrowable(() -> customerService.createCustomer(customerIncorrectEmailAddress));
+
+                //THEN
+                Assertions.assertThat(thrown)
+                        .isInstanceOf(IncorrectEmailFormatException.class)
+                        .hasMessage("The Email Address does not have the correct format");
             }
 
             @Test
             void GivenEmailAddressNotUnique_WhenCreateCustomerIsCalled_ThenBadRequestIsReturnedWithCustomMessage() {
                 //GIVEN
+                String alreadyExistingEmailAddress = "bart@simpson.com";
                 CreateCustomerDto alreadyExistingCustomer = new CreateCustomerDto.CreateCustomerDtoBuilder("Bart",
-                        "Simpson",
-                        "bart@simpson.com").build();
+                        "Simpson", alreadyExistingEmailAddress
+                        ).build();
                 customerRepository.createCustomer(customerMapper.toCustomer(alreadyExistingCustomer));
 
                 CreateCustomerDto customerDuplicateEmailAddress = new CreateCustomerDto.CreateCustomerDtoBuilder("Homer",
                         "Simpson",
-                        "bart@simpson.com").build();
+                        alreadyExistingEmailAddress).build();
 
                 //WHEN + THEN
                 RestAssured
@@ -204,6 +253,13 @@ class CustomerControllerIntegrationTests {
                         .then()
                         .assertThat()
                         .statusCode(HttpStatus.BAD_REQUEST.value());
+
+                Throwable thrown = Assertions.catchThrowable(() -> customerService.createCustomer(customerDuplicateEmailAddress));
+
+                //THEN
+                Assertions.assertThat(thrown)
+                        .isInstanceOf(EmailNotUniqueException.class)
+                        .hasMessage("Email address " + alreadyExistingEmailAddress + " is already linked to a customer account");
             }
         }
     }
