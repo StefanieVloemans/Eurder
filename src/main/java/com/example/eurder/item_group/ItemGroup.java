@@ -23,10 +23,6 @@ public class ItemGroup {
     @Column(name="SHIPPING_DATE")
     private LocalDate shippingDate;
 
-    @ManyToOne (cascade = CascadeType.PERSIST)
-    @JoinColumn (name = "FK_EURDER_ID")
-    private Order order;
-
     public ItemGroup(Item item, int amount, LocalDate shippingDate) {
         this.id = UUID.randomUUID().toString();
         this.item = item;
@@ -51,5 +47,16 @@ public class ItemGroup {
 
     public LocalDate getShippingDate() {
         return shippingDate;
+    }
+
+
+    @Override
+    public String toString() {
+        return "ItemGroup{" +
+                "id='" + id + '\'' +
+                ", item=" + item +
+                ", amount=" + amount +
+                ", shippingDate=" + shippingDate +
+                '}';
     }
 }

@@ -25,4 +25,13 @@ public class OrderDto {
     public List<ItemGroup> getItemGroupList() {
         return itemGroupList;
     }
+
+    @Override
+    public String toString() {
+        return "OrderDto{" +
+                "id='" + id + '\'' +
+                ", totalPrice=" + totalPrice +
+                ", itemGroupList=" + itemGroupList +
+                '}';
+    }
 }

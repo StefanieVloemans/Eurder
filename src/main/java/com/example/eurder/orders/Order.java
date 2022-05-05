@@ -12,6 +12,7 @@ import java.util.UUID;
 public class Order {
     @Id
     private String id;
+
     @OneToMany (cascade = CascadeType.PERSIST)
     @JoinColumn(name="FK_EURDER_ID")
     private List<ItemGroup> itemGroupList;
@@ -49,5 +50,13 @@ public class Order {
         return totalPrice;
     }
 
-
+    @Override
+    public String toString() {
+        return "Order{" +
+                "id='" + id + '\'' +
+                ", itemGroupList=" + itemGroupList +
+                ", customer=" + customer +
+                ", totalPrice=" + totalPrice +
+                '}';
+    }
 }

@@ -2,6 +2,7 @@ package com.example.eurder.orders;
 
 import com.example.eurder.customers.Customer;
 import com.example.eurder.customers.CustomerRepository;
+import com.example.eurder.infrastructure.Infrastructure;
 import com.example.eurder.item_group.ItemGroup;
 import com.example.eurder.item_group.ItemGroupMapper;
 import com.example.eurder.items.Item;
@@ -42,26 +43,32 @@ public class OrderService {
         List<ItemGroupDto> itemGroupDtos = placeOrderDto.getItemGroupDto();
         itemGroupValidation(itemGroupDtos);
 
+        double totalPrice = calculateOrderPrice(itemGroupDtos);
+        List<ItemGroup> itemGroupList = fromItemGroupDtoListToItemGroupList(placeOrderDto);
+        Customer customer = customerRepository.findById(placeOrderDto.getCustomerId());
+        Order order = orderMapper.toOrder(itemGroupList, customer, totalPrice);
+
+        orderRepository.placeOrder(order);
+        OrderDto orderDtoToReturn = orderMapper.toOrderDto(order);
+
+        for (ItemGroup itemGroup : itemGroupList) {
+            Item item = itemGroup.getItem();
+            item.setAmount(item.getAmount() - itemGroup.getAmount());
+        }
+
+        logger.info("Order placing is finished, returning orderDto to client");
+        return orderDtoToReturn;
+    }
+
+    private List<ItemGroup> fromItemGroupDtoListToItemGroupList(PlaceOrderDto placeOrderDto) {
+        // toch terug in Mapper steken?
         List<ItemGroup> itemGroupList = new ArrayList<>();
         for (ItemGroupDto itemGroupDto : placeOrderDto.getItemGroupDto()) {
             LocalDate shippingDate = calculateShippingDate(itemGroupDto);
             Item item = itemRepository.findById(itemGroupDto.getItemId());
             itemGroupList.add(itemGroupMapper.toItemGroup(item, itemGroupDto, shippingDate));
         }
-
-        double totalPrice = calculateOrderPrice(itemGroupDtos);
-        Customer customer = customerRepository.findById(placeOrderDto.getCustomerId());
-        Order order = orderMapper.toOrder(itemGroupList, customer, totalPrice);
-        orderRepository.placeOrder(order);
-        OrderDto orderDtoToReturn = orderMapper.toOrderDto(order);
-
-        for (ItemGroup itemGroup : itemGroupList) {
-            Item item = itemRepository.findById(itemGroup.getId());
-            item.setAmount(item.getAmount() - itemGroup.getAmount());
-        }
-
-        logger.info("Order placing is finished, returning orderDto to client");
-        return orderDtoToReturn;
+        return itemGroupList;
     }
 
     private void itemGroupValidation(List<ItemGroupDto> itemGroupDtos) {
@@ -72,8 +79,7 @@ public class OrderService {
             }
         }
         if (!isItemPresentInDb) {
-            logger.error(new ItemIdIncorrectException().getMessage());
-            throw new ItemIdIncorrectException();
+            Infrastructure.logAndThrowError(new ItemIdIncorrectException());
         }
     }
 
